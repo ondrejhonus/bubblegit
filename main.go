@@ -110,12 +110,15 @@ func typeCommitMessage(m model, msg tea.Msg) (model, tea.Cmd) {
 			m.commitMessage = ""
 			m.commitDesc = ""
 		case "ctrl+d":
-			// Move to commitDesc state
 			m.state = "commitDesc"
 		case "backspace":
 			// Handle backspace for commit message
 			if len(m.commitMessage) > 0 {
 				m.commitMessage = m.commitMessage[:len(m.commitMessage)-1]
+			}
+			// Handle backspace for commit description
+			if len(m.commitDesc) > 0 {
+				m.commitDesc = m.commitDesc[:len(m.commitDesc)-1]
 			}
 		case "ctrl+c", "q":
 			// Handle exit to menu and clear both fields
