@@ -82,7 +82,7 @@ func showMenu(m model) string {
 		s += fmt.Sprintf("%s %s\n", cursor, choice)
 	}
 
-	s += "\nPress q to quit.\n"
+	s += "\nPress [q] to quit.\n"
 	return s
 }
 
