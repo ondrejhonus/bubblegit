@@ -94,37 +94,66 @@ func showMenu(m model) string {
 func typeCommitMessage(m model, msg tea.Msg) (model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		switch keyMsg.String() {
-		case "enter":
-			if m.state == "commitMessage" {
-				if m.commitMessage == "" {
-					m.statusMessage = "Commit message cannot be empty!"
-					m.state = "status"
-					return m, nil
-				}
-				m.state = "commitDesc"
-			} else if m.state == "commitDesc" {
-				output := runGitCommand("git", "commit", "-m", m.commitMessage, "-m", m.commitDesc)
-				m.statusMessage = output
+		case "ctrl+s":
+			// Commit when message is entered
+			if m.commitMessage == "" {
+				m.statusMessage = "Commit message cannot be empty!"
 				m.state = "status"
-				m.commitMessage = ""
-				m.commitDesc = ""
+				return m, nil
 			}
+			output := runGitCommand("git", "commit", "-m", m.commitMessage)
+			if m.commitDesc != "" {
+				output = runGitCommand("git", "commit", "-m", m.commitMessage, "-m", m.commitDesc)
+			}
+			m.statusMessage = output
+			m.state = "status"
+			m.commitMessage = ""
+			m.commitDesc = ""
+		case "ctrl+d":
+			// Move to commitDesc state
+			m.state = "commitDesc"
 		case "backspace":
-			if m.state == "commitMessage" && len(m.commitMessage) > 0 {
+			// Handle backspace for commit message
+			if len(m.commitMessage) > 0 {
 				m.commitMessage = m.commitMessage[:len(m.commitMessage)-1]
-			} else if m.state == "commitDesc" && len(m.commitDesc) > 0 {
-				m.commitDesc = m.commitDesc[:len(m.commitDesc)-1]
 			}
 		case "ctrl+c", "q":
+			// Handle exit to menu and clear both fields
 			m.state = "menu"
 			m.commitMessage = ""
 			m.commitDesc = ""
 		default:
-			if m.state == "commitMessage" {
-				m.commitMessage += keyMsg.String()
-			} else if m.state == "commitDesc" {
-				m.commitDesc += keyMsg.String()
+			// Append input to commit message
+			m.commitMessage += keyMsg.String()
+		}
+	}
+	return m, nil
+}
+
+// Get keypresses and update the commit description
+func typeCommitDesc(m model, msg tea.Msg) (model, tea.Cmd) {
+	if keyMsg, ok := msg.(tea.KeyMsg); ok {
+		switch keyMsg.String() {
+		case "ctrl+s", "enter":
+			// Commit when description is entered
+			output := runGitCommand("git", "commit", "-m", m.commitMessage, "-m", m.commitDesc)
+			m.statusMessage = output
+			m.state = "status"
+			m.commitMessage = ""
+			m.commitDesc = ""
+		case "backspace":
+			// Handle backspace for commit description
+			if len(m.commitDesc) > 0 {
+				m.commitDesc = m.commitDesc[:len(m.commitDesc)-1]
 			}
+		case "ctrl+c", "q":
+			// Handle exit to menu and clear both fields
+			m.state = "menu"
+			m.commitMessage = ""
+			m.commitDesc = ""
+		default:
+			// Append input to commit description
+			m.commitDesc += keyMsg.String()
 		}
 	}
 	return m, nil
@@ -219,6 +248,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m, cmd = menuFunctions(m, msg)
 	case "commitMessage":
 		m, cmd = typeCommitMessage(m, msg)
+	case "commitDesc":
+		m, cmd = typeCommitDesc(m, msg)
 	case "add":
 		m, cmd = add(m, msg)
 	case "addFile":
@@ -243,15 +274,15 @@ func (m model) View() string {
 	case "menu":
 		return showMenu(m)
 	case "commitMessage":
-		return fmt.Sprintf("Enter commit message: %s\n\nPress enter to add description or q to cancel.\n", m.commitMessage)
+		return fmt.Sprintf("Enter commit message: %s\n\nPress [ctrl+s] to commit, [ctrl+d] to add description or [ctrl+c] to cancel.\n", m.commitMessage)
 	case "commitDesc":
-		return fmt.Sprintf("Enter commit description: %s\n\nPress enter to commit or q to cancel.\n", m.commitDesc)
+		return fmt.Sprintf("Enter commit description: %s\n\nPress [enter] or [ctrl+s] to commit or [ctrl+c] to cancel.\n", m.commitDesc)
 	case "add":
 		return showAddMenu(m)
 	case "addFile":
-		return fmt.Sprintf("Enter file name to add: %s\n\nPress enter to add or q to cancel.\n", m.commitMessage)
+		return fmt.Sprintf("Enter file name to add: %s\n\nPress [enter] to add or [ctrl+c] to cancel.\n", m.commitMessage)
 	case "status":
-		return fmt.Sprintf("%s\n\nPress enter to return to menu.", m.statusMessage)
+		return fmt.Sprintf("%s\n\nPress [enter] to return to menu.", m.statusMessage)
 	}
 	return ""
 }
