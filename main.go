@@ -12,7 +12,9 @@ type model struct {
 	choices       []string
 	cursor        int
 	selected      map[int]struct{}
+	isTypingMsg   bool
 	commitMessage string
+	commitDesc    string
 	state         string
 	statusMessage string
 }
@@ -52,6 +54,7 @@ func menuFunctions(m model, msg tea.Msg) (model, tea.Cmd) {
 			case 0:
 				m.state = "add"
 			case 1:
+				m.isTypingMsg = true
 				m.state = "commitMessage"
 			case 2:
 				runGitCommand("git", "push")
@@ -92,14 +95,36 @@ func typeCommitMessage(m model, msg tea.Msg) (model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		switch keyMsg.String() {
 		case "enter":
-			runGitCommand("git", "commit", "-m", m.commitMessage)
-			m.state = "menu"
-			m.commitMessage = ""
+			if m.state == "commitMessage" {
+				if m.commitMessage == "" {
+					m.statusMessage = "Commit message cannot be empty!"
+					m.state = "status"
+					return m, nil
+				}
+				m.state = "commitDesc"
+			} else if m.state == "commitDesc" {
+				output := runGitCommand("git", "commit", "-m", m.commitMessage, "-m", m.commitDesc)
+				m.statusMessage = output
+				m.state = "status"
+				m.commitMessage = ""
+				m.commitDesc = ""
+			}
+		case "backspace":
+			if m.state == "commitMessage" && len(m.commitMessage) > 0 {
+				m.commitMessage = m.commitMessage[:len(m.commitMessage)-1]
+			} else if m.state == "commitDesc" && len(m.commitDesc) > 0 {
+				m.commitDesc = m.commitDesc[:len(m.commitDesc)-1]
+			}
 		case "ctrl+c", "q":
 			m.state = "menu"
 			m.commitMessage = ""
+			m.commitDesc = ""
 		default:
-			m.commitMessage += keyMsg.String()
+			if m.state == "commitMessage" {
+				m.commitMessage += keyMsg.String()
+			} else if m.state == "commitDesc" {
+				m.commitDesc += keyMsg.String()
+			}
 		}
 	}
 	return m, nil
@@ -218,7 +243,9 @@ func (m model) View() string {
 	case "menu":
 		return showMenu(m)
 	case "commitMessage":
-		return fmt.Sprintf("Enter commit message: %s\n\nPress enter to commit or q to cancel.\n", m.commitMessage)
+		return fmt.Sprintf("Enter commit message: %s\n\nPress enter to add description or q to cancel.\n", m.commitMessage)
+	case "commitDesc":
+		return fmt.Sprintf("Enter commit description: %s\n\nPress enter to commit or q to cancel.\n", m.commitDesc)
 	case "add":
 		return showAddMenu(m)
 	case "addFile":
