@@ -94,7 +94,7 @@ func showMenu(m model) string {
 func typeCommitMessage(m model, msg tea.Msg) (model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		switch keyMsg.String() {
-		case "ctrl+s":
+		case "ctrl+s", "enter":
 			// Commit when message is entered
 			if m.commitMessage == "" {
 				m.statusMessage = "Commit message cannot be empty!"
@@ -126,7 +126,6 @@ func typeCommitMessage(m model, msg tea.Msg) (model, tea.Cmd) {
 			m.commitMessage = ""
 			m.commitDesc = ""
 		default:
-			// Append input to commit message
 			m.commitMessage += keyMsg.String()
 		}
 	}
