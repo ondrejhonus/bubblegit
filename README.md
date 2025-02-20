@@ -4,19 +4,18 @@ This is a simple TUI (Text User Interface) application written in Go using the [
 
 ## Features
 
-- **View Status**: Check the current status of your Git repository.
-- **Stage Changes**: Stage files for commit.
+- **Add Files**: Add files to the staging area.
 - **Commit Changes**: Commit staged changes with a message.
-- **View Log**: View the commit history of the repository.
-- **Switch Branches**: List and switch between branches.
+- **Push Changes**: Push committed changes to the remote repository.
+- **Initialize Repository**: Initialize a new Git repository.
 
 ## Installation
 
 To install the app, you need to have Go installed on your machine. Then, you can clone the repository and build the app:
 
 ```sh
-git clone https://github.com/yourusername/bubbletea-git-tui.git
-cd bubbletea-git-tui
+git clone https://github.com/ondrejhonus/bubblegit.git
+cd bubblegit
 go build -o git-tui
 ```
 
@@ -29,11 +28,3 @@ Run the app from the terminal:
 ```
 
 Use the keyboard to navigate and perform Git actions.
-
-## Contributing
-
-Contributions are welcome! Please open an issue or submit a pull request with any improvements or bug fixes.
-
-## License
-
-This project is licensed under the MIT License.
