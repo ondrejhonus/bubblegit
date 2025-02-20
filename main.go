@@ -120,7 +120,7 @@ func typeCommitMessage(m model, msg tea.Msg) (model, tea.Cmd) {
 			if len(m.commitDesc) > 0 {
 				m.commitDesc = m.commitDesc[:len(m.commitDesc)-1]
 			}
-		case "ctrl+c", "q":
+		case "ctrl+c":
 			// Handle exit to menu and clear both fields
 			m.state = "menu"
 			m.commitMessage = ""
@@ -148,7 +148,7 @@ func typeCommitDesc(m model, msg tea.Msg) (model, tea.Cmd) {
 			if len(m.commitDesc) > 0 {
 				m.commitDesc = m.commitDesc[:len(m.commitDesc)-1]
 			}
-		case "ctrl+c", "q":
+		case "ctrl+c":
 			// Handle exit to menu and clear both fields
 			m.state = "menu"
 			m.commitMessage = ""
@@ -211,7 +211,7 @@ func addFile(m model, msg tea.Msg) (model, tea.Cmd) {
 			runGitCommand("git", "add", m.commitMessage)
 			m.state = "menu"
 			m.commitMessage = ""
-		case "ctrl+c", "q":
+		case "ctrl+c":
 			m.state = "menu"
 			m.commitMessage = ""
 		default:
@@ -234,7 +234,7 @@ func showAddMenu(m model) string {
 		s += fmt.Sprintf("%s %s\n", cursor, choice)
 	}
 
-	s += "\nPress q to cancel.\n"
+	s += "\nPress [ctrl+c] to cancel.\n"
 	return s
 }
 
@@ -276,9 +276,9 @@ func (m model) View() string {
 	case "menu":
 		return showMenu(m)
 	case "commitMessage":
-		return fmt.Sprintf("Enter commit message: %s\n\nPress [ctrl+s] to commit, [ctrl+d] to add description or [ctrl+c] to cancel.\n", m.commitMessage)
+		return fmt.Sprintf("Enter commit message: %s\n\nPress [enter] to commit, [ctrl+d] to add description or [ctrl+c] to cancel.\n", m.commitMessage)
 	case "commitDesc":
-		return fmt.Sprintf("Enter commit description: %s\n\nPress [enter] or [ctrl+s] to commit or [ctrl+c] to cancel.\n", m.commitDesc)
+		return fmt.Sprintf("Enter commit description: %s\n\nPress [enter] to commit or [ctrl+c] to cancel.\n", m.commitDesc)
 	case "add":
 		return showAddMenu(m)
 	case "addFile":
@@ -291,7 +291,7 @@ func (m model) View() string {
 
 func main() {
 	p := tea.NewProgram(initialModel())
-	if err := p.Start(); err != nil {
+	if _, err := p.Run(); err != nil {
 		log.Fatal(err)
 	}
 }
