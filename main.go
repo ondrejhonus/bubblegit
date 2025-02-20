@@ -200,7 +200,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m, cmd = addFile(m, msg)
 	case "status":
 		if keyMsg, ok := msg.(tea.KeyMsg); ok {
-			if keyMsg.String() == "enter" {
+			if keyMsg.String() == "enter" || keyMsg.String() == "q" {
 				m.state = "menu"
 			}
 		}

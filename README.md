@@ -16,7 +16,7 @@ To install the app, you need to have Go installed on your machine. Then, you can
 ```sh
 git clone https://github.com/ondrejhonus/bubblegit.git
 cd bubblegit
-go build -o git-tui
+go build -o bubblegit
 ```
 
 ## Usage
@@ -24,7 +24,7 @@ go build -o git-tui
 Run the app from the terminal:
 
 ```sh
-./git-tui
+./bubblegit
 ```
 
 Use the keyboard to navigate and perform Git actions.
