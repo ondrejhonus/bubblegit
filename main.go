@@ -12,16 +12,19 @@ type model struct {
 	choices       []string
 	cursor        int
 	selected      map[int]struct{}
-	isTypingMsg   bool
+	statusMessage string
+	state         string
+	isTypingMsg   bool // Commit
 	commitMessage string
 	commitDesc    string
-	state         string
-	statusMessage string
+	repoName      string // Repo create
+	isPublic      bool
+	source        string
 }
 
 func initialModel() model {
 	return model{
-		choices:  []string{"Add", "Commit", "Push", "Init"},
+		choices:  []string{"Add", "Commit", "Push", "Init", "Create repo"},
 		selected: make(map[int]struct{}),
 		state:    "menu", // default state
 	}
@@ -64,6 +67,8 @@ func menuFunctions(m model, msg tea.Msg) (model, tea.Cmd) {
 				output := runGitCommand("git", "init")
 				m.statusMessage = output
 				m.state = "status"
+			case 4:
+				m.state = "createRepo"
 			}
 		}
 	}
@@ -239,6 +244,49 @@ func showAddMenu(m model) string {
 }
 
 ///////////////////////////////////
+/////////// CREATE REPO ///////////
+///////////////////////////////////
+
+/* Some gh commands ill use:
+1. gh repo create <repo-name> --description "<repo-description>" --public --source .
+2. gh repo create <repo-name> --description "<repo-description>" --private --source .
+This one creates a local folder and makes a gh repo
+3. gh repo create my-project --public --clone
+*/
+
+/*
+>	Create repo from ./
+	>	Repo name: [Default: {wd}]
+		Repo description:
+		Source: [Default: .]
+		[*] Public
+		[ ] Readme
+		[ ] .gitignore
+	Create empty remote + local repo
+	>	Repo name:
+		Repo description
+		[*] Public
+		[ ] Readme
+		[ ] .gitignore
+	Create empty remote repo
+	>	Repo name:
+		Repo description
+		[*] Public
+		[ ] Readme
+		[ ] .gitignore
+*/
+
+func createRepo(m model, msg tea.Msg) (model, tea.Cmd) {
+	if keyMsg, ok := msg.(tea.KeyMsg); ok {
+		switch keyMsg.String() {
+		case "enter", "tab":
+			break
+		}
+	}
+	return m, nil
+}
+
+///////////////////////////////////
 /////////// UPDATE ////////////////
 ///////////////////////////////////
 
@@ -262,6 +310,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.state = "menu"
 			}
 		}
+	case "createRepo":
+		m, cmd = createRepo(m, msg)
 	}
 
 	return m, cmd

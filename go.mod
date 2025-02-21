@@ -3,8 +3,12 @@ module bubbletea-test
 go 1.24.0
 
 require (
+	github.com/charmbracelet/bubbletea v1.3.3
+	golang.org/x/tools v0.1.12
+)
+
+require (
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
-	github.com/charmbracelet/bubbletea v1.3.3 // indirect
 	github.com/charmbracelet/lipgloss v1.0.0 // indirect
 	github.com/charmbracelet/x/ansi v0.8.0 // indirect
 	github.com/charmbracelet/x/term v0.2.1 // indirect
