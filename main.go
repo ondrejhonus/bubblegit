@@ -76,15 +76,8 @@ func menuFunctions(m model, msg tea.Msg) (model, tea.Cmd) {
 				// Push
 				m.cursor = 0
 				showStatus(m, "Pushing to remote...")
-				return m, tea.Batch(
-					func() tea.Msg {
-						output := runCommand("git", "push")
-						return tea.Msg(output)
-					},
-					func() tea.Msg {
-						return tea.Msg("Pushed to remote!")
-					},
-				)
+				output := runCommand("git", "push")
+				showStatus(m, output)
 			case 3:
 				output := runCommand("git", "init")
 				showStatus(m, output)
