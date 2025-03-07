@@ -10,69 +10,6 @@ import (
 )
 
 ///////////////////////////////////
-/////////// MENU ////////////////
-///////////////////////////////////
-
-// Get keypresses and update the cursor
-func menuFunctions(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
-	if keyMsg, ok := msg.(tea.KeyMsg); ok {
-		switch keyMsg.String() {
-		case "ctrl+c", "q":
-			return m, tea.Quit
-		case "up", "k":
-			if m.Cursor > 0 {
-				m.Cursor--
-			}
-		case "down", "j":
-			if m.Cursor < len(m.Choices)-1 {
-				m.Cursor++
-			}
-		case "enter":
-			switch m.Cursor {
-			case 0:
-				// Add
-				m.State = "add"
-				m.Cursor = 0
-			case 1:
-				// Commit
-				m.IsTypingMsg = true
-				m.State = "commitMessage"
-				m.Cursor = 0
-			case 2:
-				// Push
-
-				output := utils.RunCommand("git", "push")
-				m = utils.ShowStatus(m, output)
-				utils.ShowStatus(m, output)
-			case 3:
-				output := utils.RunCommand("git", "init")
-				utils.ShowStatus(m, output)
-			case 4:
-				m.State = "createRepo"
-				m.Cursor = 0
-			}
-		}
-	}
-	return m, nil
-}
-
-// Print the menu on the screen
-func showMenu(m utils.Model) string {
-	s := "What would you like to do?\n\n"
-
-	for i, choice := range m.Choices {
-		cursor := " "
-		if m.Cursor == i {
-			cursor = ">"
-		}
-		s += fmt.Sprintf("%s %s\n", cursor, choice)
-	}
-
-	s += "\nPress [q] to quit.\n"
-	return s
-}
-
-///////////////////////////////////
 /////////// UPDATE ////////////////
 ///////////////////////////////////
 
@@ -86,7 +23,7 @@ func (m localModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	switch m.State {
 	case "menu":
-		m.Model, cmd = menuFunctions(m.Model, msg) // FIX: Use `=` instead of `:=`
+		m.Model, cmd = pkg.MenuFunctions(m.Model, msg) // FIX: Use `=` instead of `:=`
 	case "commitMessage":
 		m.Model, cmd = pkg.TypeCommitMessage(m.Model, msg)
 	case "commitDesc":
@@ -116,7 +53,7 @@ func (m localModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m localModel) View() string {
 	switch m.State {
 	case "menu":
-		return showMenu(m.Model)
+		return pkg.ShowMenu(m.Model)
 	case "commitMessage":
 		return fmt.Sprintf("Enter commit message: %s\n\nPress [enter] to commit, [ctrl+d] to add description or [ctrl+c] to cancel.\n", m.CommitMessage)
 	case "commitDesc":
