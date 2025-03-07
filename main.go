@@ -38,9 +38,10 @@ func (m model) Init() tea.Cmd {
 	return nil
 }
 
-func showStatus(m model, msg string) {
+func showStatus(m model, msg string) model {
 	m.statusMessage = msg
 	m.state = "status"
+	return m
 }
 
 ///////////////////////////////////
@@ -74,9 +75,10 @@ func menuFunctions(m model, msg tea.Msg) (model, tea.Cmd) {
 				m.cursor = 0
 			case 2:
 				// Push
-				m.cursor = 0
-				showStatus(m, "Pushing to remote...")
+				m = showStatus(m, "Pushing to remote...")
+
 				output := runCommand("git", "push")
+				m = showStatus(m, output)
 				showStatus(m, output)
 			case 3:
 				output := runCommand("git", "init")
