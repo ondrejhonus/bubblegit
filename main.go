@@ -71,9 +71,11 @@ func menuFunctions(m model, msg tea.Msg) (model, tea.Cmd) {
 				// Push
 				m.statusMessage = "Pushing..."
 				m.state = "status"
-				runCommand("git", "push")
-				m.statusMessage = "Pushed to remote."
 				m.cursor = 0
+				return m, func() tea.Msg {
+					runCommand("git", "push")
+					return "Pushed to remote."
+				}
 			case 3:
 				output := runCommand("git", "init")
 				m.statusMessage = output
