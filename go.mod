@@ -1,4 +1,4 @@
-module bubbletea-test
+module bubblegit
 
 go 1.24.0
 
