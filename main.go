@@ -18,6 +18,7 @@ type model struct {
 	commitMessage string
 	commitDesc    string
 	repoName      string // Repo create
+	repoDesc      string
 	isPublic      bool
 	source        string
 }
@@ -56,19 +57,23 @@ func menuFunctions(m model, msg tea.Msg) (model, tea.Cmd) {
 			switch m.cursor {
 			case 0:
 				m.state = "add"
+				m.cursor = 0
 			case 1:
 				m.isTypingMsg = true
 				m.state = "commitMessage"
+				m.cursor = 0
 			case 2:
-				runGitCommand("git", "push")
+				runCommand("git", "push")
 				m.statusMessage = "Pushed to remote."
 				m.state = "status"
+				m.cursor = 0
 			case 3:
-				output := runGitCommand("git", "init")
+				output := runCommand("git", "init")
 				m.statusMessage = output
 				m.state = "status"
 			case 4:
 				m.state = "createRepo"
+				m.cursor = 0
 			}
 		}
 	}
@@ -92,7 +97,7 @@ func showMenu(m model) string {
 }
 
 // /////// RUN GIT COMMAND //////////
-func runGitCommand(name string, args ...string) string {
+func runCommand(name string, args ...string) string {
 	cmd := exec.Command(name, args...)
 
 	output, err := cmd.CombinedOutput()
@@ -113,7 +118,7 @@ func add(m model, msg tea.Msg) (model, tea.Cmd) {
 		case "enter":
 			switch m.cursor {
 			case 0:
-				runGitCommand("git", "add", ".")
+				runCommand("git", "add", ".")
 				m.state = "menu"
 			case 1:
 				m.state = "addFile"
@@ -138,7 +143,7 @@ func addFile(m model, msg tea.Msg) (model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		switch keyMsg.String() {
 		case "enter":
-			runGitCommand("git", "add", m.commitMessage)
+			runCommand("git", "add", m.commitMessage)
 			m.state = "menu"
 			m.commitMessage = ""
 		case "ctrl+c":
@@ -183,9 +188,9 @@ func typeCommitMessage(m model, msg tea.Msg) (model, tea.Cmd) {
 				m.state = "status"
 				return m, nil
 			}
-			output := runGitCommand("git", "commit", "-m", m.commitMessage)
+			output := runCommand("git", "commit", "-m", m.commitMessage)
 			if m.commitDesc != "" {
-				output = runGitCommand("git", "commit", "-m", m.commitMessage, "-m", m.commitDesc)
+				output = runCommand("git", "commit", "-m", m.commitMessage, "-m", m.commitDesc)
 			}
 			m.statusMessage = output
 			m.state = "status"
@@ -220,7 +225,7 @@ func typeCommitDesc(m model, msg tea.Msg) (model, tea.Cmd) {
 		switch keyMsg.String() {
 		case "ctrl+s", "enter":
 			// Commit when description is entered
-			output := runGitCommand("git", "commit", "-m", m.commitMessage, "-m", m.commitDesc)
+			output := runCommand("git", "commit", "-m", m.commitMessage, "-m", m.commitDesc)
 			m.statusMessage = output
 			m.state = "status"
 			m.commitMessage = ""
@@ -286,15 +291,15 @@ func repoCreate(m model, msg tea.Msg) (model, tea.Cmd) {
 				m.state = "fromLocal"
 			case 1:
 				m.state = "localRemote"
-			case 3:
+			case 2:
 				m.state = "emptyRemote"
 			}
-		case "tab", "k":
+		case "up", "k":
 			if m.cursor > 0 {
 				m.cursor--
 			}
 		case "down", "j":
-			if m.cursor < 1 {
+			if m.cursor < 2 {
 				m.cursor++
 			}
 		case "ctrl+c", "q":
@@ -304,29 +309,114 @@ func repoCreate(m model, msg tea.Msg) (model, tea.Cmd) {
 	return m, nil
 }
 
+func showCreateRepoMenu(m model) string {
+	s := "What would you want to do?\n\n"
+	createChoices := []string{"Create repo from ./", "Create empty remote + local repo", "Create empty remote repo"}
+	for i, choice := range createChoices {
+		cursor := " "
+		if m.cursor == i {
+			cursor = ">"
+		}
+		s += fmt.Sprintf("%s %s\n", cursor, choice)
+	}
+
+	s += "\nPress [ctrl+c] to cancel, press [enter] to confirm.\n"
+	return s
+}
+
 // Get keypresses and update the file name to add
 func fromLocal(m model, msg tea.Msg) (model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		switch keyMsg.String() {
 		case "enter":
-			// runGitCommand("git", "add", m.commitMessage)
-			m.state = "menu"
-			m.commitMessage = ""
+			switch m.cursor {
+			case 0:
+				// Repo name
+				if m.repoName == "" {
+					m.repoName = "bubblegit-repo"
+				}
+				m.cursor++
+			case 1:
+				// Repo description
+				m.cursor++
+			case 2:
+				// Source
+				if m.source == "" {
+					m.source = "."
+				}
+				m.cursor++
+			case 3:
+				// Public
+				m.isPublic = !m.isPublic
+			case 4:
+				// Create repo
+				var visibility string
+				if m.isPublic {
+					visibility = "--public"
+				} else {
+					visibility = "--private"
+				}
+				runCommand("gh", "repo", "create", m.repoName, "--description", m.repoDesc, visibility, "--source", m.source)
+				m.state = "menu"
+				m.repoName = ""
+				m.repoDesc = ""
+				m.source = ""
+				m.isPublic = false
+			}
+		case "up", "k":
+			if m.cursor > 0 {
+				m.cursor--
+			}
+		case "down", "j":
+			if m.cursor < 4 {
+				m.cursor++
+			}
 		case "ctrl+c":
 			m.state = "menu"
-			m.commitMessage = ""
+			m.repoName = ""
+			m.repoDesc = ""
+			m.source = ""
+			m.isPublic = false
 		default:
-			m.commitMessage += keyMsg.String()
+			switch m.cursor {
+			case 0:
+				m.repoName += keyMsg.String()
+			case 1:
+				m.repoDesc += keyMsg.String()
+			case 2:
+				m.source += keyMsg.String()
+			}
 		}
 	}
 	return m, nil
+}
+
+func showFromLocalMenu(m model) string {
+	s := "Enter the following details:\n\n"
+	createChoices := []string{
+		fmt.Sprintf("Repo name: %s", m.repoName),
+		fmt.Sprintf("Repo description: %s", m.repoDesc),
+		fmt.Sprintf("Repo source: %s", m.source),
+		fmt.Sprintf("Public: %t", m.isPublic),
+	}
+
+	for i, choice := range createChoices {
+		cursor := " "
+		if m.cursor == i {
+			cursor = ">"
+		}
+		s += fmt.Sprintf("%s %s\n", cursor, choice)
+	}
+
+	s += "\nPress [ctrl+c] to cancel, press [enter] to confirm.\n"
+	return s
 }
 
 func localRemote(m model, msg tea.Msg) (model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		switch keyMsg.String() {
 		case "enter":
-			runGitCommand("git", "add", m.commitMessage)
+			runCommand("git", "add", m.commitMessage)
 			m.state = "menu"
 			m.commitMessage = ""
 		case "ctrl+c":
@@ -343,7 +433,7 @@ func emptyRemote(m model, msg tea.Msg) (model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		switch keyMsg.String() {
 		case "enter":
-			runGitCommand("git", "add", m.commitMessage)
+			runCommand("git", "add", m.commitMessage)
 			m.state = "menu"
 			m.commitMessage = ""
 		case "ctrl+c":
@@ -354,22 +444,6 @@ func emptyRemote(m model, msg tea.Msg) (model, tea.Cmd) {
 		}
 	}
 	return m, nil
-}
-
-func showCreateRepoMenu(m model) string {
-	s := "What would you want to do?\n\n"
-	addChoices := []string{"Create repo from ./", "Create empty remote + local repo", "Create empty remote repo"}
-
-	for i, choice := range addChoices {
-		cursor := " "
-		if m.cursor == i {
-			cursor = ">"
-		}
-		s += fmt.Sprintf("%s %s\n", cursor, choice)
-	}
-
-	s += "\nPress [ctrl+c] to cancel, press [enter] to confirm.\n"
-	return s
 }
 
 ///////////////////////////////////
@@ -397,7 +471,13 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		}
 	case "createRepo":
-		m.state = "showCreateRepoMenu"
+		m, cmd = repoCreate(m, msg)
+	case "fromLocal":
+		m, cmd = fromLocal(m, msg)
+	case "localRemote":
+		m, cmd = localRemote(m, msg)
+	case "emptyRemote":
+		m, cmd = emptyRemote(m, msg)
 	}
 
 	return m, cmd
@@ -421,8 +501,10 @@ func (m model) View() string {
 		return fmt.Sprintf("Enter file name to add: %s\n\nPress [enter] to add or [ctrl+c] to cancel.\n", m.commitMessage)
 	case "status":
 		return fmt.Sprintf("%s\n\nPress [enter] to return to menu.", m.statusMessage)
-	case "showCreateRepoMenu":
-		showCreateRepoMenu(m)
+	case "createRepo":
+		return showCreateRepoMenu(m)
+	case "fromLocal":
+		return showFromLocalMenu(m)
 	}
 
 	return ""
