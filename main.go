@@ -59,16 +59,20 @@ func menuFunctions(m model, msg tea.Msg) (model, tea.Cmd) {
 		case "enter":
 			switch m.cursor {
 			case 0:
+				// Add
 				m.state = "add"
 				m.cursor = 0
 			case 1:
+				// Commit
 				m.isTypingMsg = true
 				m.state = "commitMessage"
 				m.cursor = 0
 			case 2:
+				// Push
+				m.statusMessage = "Pushing..."
+				m.state = "status"
 				runCommand("git", "push")
 				m.statusMessage = "Pushed to remote."
-				m.state = "status"
 				m.cursor = 0
 			case 3:
 				output := runCommand("git", "init")
@@ -462,6 +466,7 @@ func createEmpty(m model, msg tea.Msg) (model, tea.Cmd) {
 				m.repoDesc = ""
 				m.source = ""
 				m.isPublic = false
+				m.createClone = false
 			}
 		case "up":
 			if m.cursor > 0 {
@@ -557,7 +562,6 @@ func showCreateEmpty(m model) string {
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
-
 	switch m.state {
 	case "menu":
 		m, cmd = menuFunctions(m, msg)
