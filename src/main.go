@@ -13,11 +13,11 @@ import (
 /////////// UPDATE ////////////////
 ///////////////////////////////////
 
+// Create a local model based on Model from utils
 type localModel struct {
 	utils.Model
 }
 
-// Implement Bubble Tea's Update function on localModel
 func (m localModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 
@@ -49,7 +49,6 @@ func (m localModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
-// Implement Bubble Tea's View function on localModel
 func (m localModel) View() string {
 	switch m.State {
 	case "menu":
@@ -76,7 +75,6 @@ func (m localModel) View() string {
 }
 
 func main() {
-	// FIX: Wrap utils.InitialModel() in localModel
 	p := tea.NewProgram(localModel{Model: utils.InitialModel()})
 
 	if _, err := p.Run(); err != nil {
