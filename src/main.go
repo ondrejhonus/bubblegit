@@ -44,6 +44,12 @@ func (m localModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Model, cmd = pkg.FromLocal(m.Model, msg)
 	case "createEmpty":
 		m.Model, cmd = pkg.CreateEmpty(m.Model, msg)
+	case "branches":
+		m.Model, cmd = pkg.BranchControl(m.Model, msg)
+	case "checkoutBranch":
+		m.Model, cmd = pkg.CheckoutBranch(m.Model, msg)
+	case "setUpstream":
+		m.Model, cmd = pkg.SetUpstream(m.Model, msg)
 	}
 
 	return m, cmd
@@ -69,6 +75,12 @@ func (m localModel) View() string {
 		return pkg.ShowCreateFromLocal(m.Model)
 	case "createEmpty":
 		return pkg.ShowCreateEmpty(m.Model)
+	case "branches":
+		return pkg.ShowBranchesMenu(m.Model)
+	case "checkoutBranch":
+		return pkg.ShowCheckoutBranch(m.Model)
+	case "setUpstream":
+		return pkg.ShowSetUpstream(m.Model)
 	}
 
 	return ""

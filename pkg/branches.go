@@ -21,22 +21,22 @@ func BranchControl(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			case 0:
 				m.State = "checkoutBranch"
 			case 1:
-				m.State = "deleteBranch"
-			case 2:
-				m.State = "renameBranch"
-			case 3:
-				m.State = "mergeBranch"
-			case 4:
-				m.State = "rebaseBranch"
-			case 5:
 				m.State = "setUpstream"
+			case 2:
+				m.State = "deleteBranch"
+			case 3:
+				m.State = "renameBranch"
+			case 4:
+				m.State = "mergeBranch"
+			case 5:
+				m.State = "rebaseBranch"
 			}
 		case "up", "k":
 			if m.Cursor > 0 {
 				m.Cursor--
 			}
 		case "down", "j":
-			if m.Cursor < 1 {
+			if m.Cursor < 5 {
 				m.Cursor++
 			}
 		case "ctrl+c", "q":
@@ -51,11 +51,11 @@ func ShowBranchesMenu(m utils.Model) string {
 	s := "Branches\n\n"
 	branchChoices := []string{
 		"Checkout branch",
+		"Set upstream",
 		"Delete branch",
 		"Rename branch",
 		"Merge branch",
 		"Rebase branch",
-		"Set upstream",
 	}
 
 	for i, choice := range branchChoices {
@@ -71,7 +71,7 @@ func ShowBranchesMenu(m utils.Model) string {
 }
 
 // Get keypresses and update the file name to add
-func TypeCheckout(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
+func CheckoutBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		switch keyMsg.String() {
 		case "enter":
@@ -87,7 +87,9 @@ func TypeCheckout(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor++
 			case 2:
 				if m.CreateBranch {
-					utils.RunCommand("git", "checkout", "-b", m.BranchName)
+					output := utils.RunCommand("git", "checkout", "-b", m.BranchName)
+					utils.ShowStatus(m, output)
+
 				} else {
 					utils.RunCommand("git", "checkout", m.BranchName)
 				}
@@ -95,6 +97,14 @@ func TypeCheckout(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor = 0
 				m.BranchName = ""
 				m.CreateBranch = false
+			}
+		case "up":
+			if m.Cursor > 0 {
+				m.Cursor--
+			}
+		case "down", "tab":
+			if m.Cursor < 2 {
+				m.Cursor++
 			}
 		case "ctrl+c":
 			m.State = "menu"
@@ -113,7 +123,7 @@ func TypeCheckout(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 }
 
 // Print the add menu on the screen
-func ShowCheckoutMenu(m utils.Model) string {
+func ShowCheckoutBranch(m utils.Model) string {
 	s := "Configure branch checkout\n\n"
 	branchChoices := []string{
 		fmt.Sprintf("Branch name: %s", m.BranchName),
@@ -130,5 +140,54 @@ func ShowCheckoutMenu(m utils.Model) string {
 	}
 
 	s += "\nPress [ctrl+c] to cancel, press [enter] to confirm or change bool value.\n"
+	return s
+}
+
+func SetUpstream(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
+	if keyMsg, ok := msg.(tea.KeyMsg); ok {
+		switch keyMsg.String() {
+		case "enter":
+			if m.BranchName == "" {
+				currentBranch := utils.RunCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
+				output := utils.RunCommand("git", "branch", "--set-upstream-to", "origin/"+currentBranch)
+				utils.ShowStatus(m, output)
+				m.State = "menu"
+				m.Cursor = 0
+				m.BranchName = ""
+			} else {
+				output := utils.RunCommand("git", "branch", "--set-upstream-to", m.BranchName)
+				utils.ShowStatus(m, output)
+				m.State = "menu"
+				m.Cursor = 0
+				m.BranchName = ""
+			}
+		case "ctrl+c":
+			m.State = "menu"
+			m.BranchName = ""
+		case "backspace":
+			if len(m.BranchName) > 0 {
+				m.BranchName = m.BranchName[:len(m.BranchName)-1]
+			}
+		default:
+			m.BranchName += keyMsg.String()
+		}
+	}
+	return m, nil
+}
+
+func ShowSetUpstream(m utils.Model) string {
+	s := "Set upstream\n\n"
+	branchChoices := []string{
+		fmt.Sprintf("Branch name (blank for current): %s", m.BranchName),
+	}
+	for i, choice := range branchChoices {
+		cursor := " "
+		if m.Cursor == i {
+			cursor = ">"
+		}
+		s += fmt.Sprintf("%s %s\n", cursor, choice)
+	}
+
+	s += "\nPress [ctrl+c] to cancel, press [enter] to confirm.\n"
 	return s
 }
