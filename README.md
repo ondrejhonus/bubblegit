@@ -8,6 +8,11 @@ This is a simple TUI (Text User Interface) application written in Go using the [
 - **Commit Changes**: Commit staged changes with a message.
 - **Push Changes**: Push committed changes to the remote repository.
 - **Initialize Repository**: Initialize a new Git repository.
+- **Create a repository**: Create a repo from local dir or empty remote
+
+# TO-DO
+- **Checkout branches**
+- **PRs**
 
 ## Installation
 
