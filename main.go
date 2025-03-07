@@ -149,6 +149,10 @@ func addFile(m model, msg tea.Msg) (model, tea.Cmd) {
 		case "ctrl+c":
 			m.state = "menu"
 			m.commitMessage = ""
+		case "backspace":
+			if len(m.commitMessage) > 0 {
+				m.commitMessage = m.commitMessage[:len(m.commitMessage)-1]
+			}
 		default:
 			m.commitMessage += keyMsg.String()
 		}
@@ -363,11 +367,11 @@ func fromLocal(m model, msg tea.Msg) (model, tea.Cmd) {
 				m.source = ""
 				m.isPublic = false
 			}
-		case "up", "k":
+		case "up":
 			if m.cursor > 0 {
 				m.cursor--
 			}
-		case "down", "j":
+		case "down", "tab":
 			if m.cursor < 4 {
 				m.cursor++
 			}
@@ -386,6 +390,21 @@ func fromLocal(m model, msg tea.Msg) (model, tea.Cmd) {
 			case 2:
 				m.source += keyMsg.String()
 			}
+		case "backspace":
+			switch m.cursor {
+			case 0:
+				if len(m.repoName) > 0 {
+					m.repoName = m.repoName[:len(m.repoName)-1]
+				}
+			case 1:
+				if len(m.repoDesc) > 0 {
+					m.repoDesc = m.repoDesc[:len(m.repoDesc)-1]
+				}
+			case 2:
+				if len(m.source) > 0 {
+					m.source = m.source[:len(m.source)-1]
+				}
+			}
 		}
 	}
 	return m, nil
@@ -394,10 +413,11 @@ func fromLocal(m model, msg tea.Msg) (model, tea.Cmd) {
 func showFromLocalMenu(m model) string {
 	s := "Enter the following details:\n\n"
 	createChoices := []string{
-		fmt.Sprintf("Repo name: %s", m.repoName),
-		fmt.Sprintf("Repo description: %s", m.repoDesc),
-		fmt.Sprintf("Repo source: %s", m.source),
+		fmt.Sprintf("Name: %s", m.repoName),
+		fmt.Sprintf("Description: %s", m.repoDesc),
+		fmt.Sprintf("Source (def=.): %s", m.source),
 		fmt.Sprintf("Public: %t", m.isPublic),
+		"Create repo",
 	}
 
 	for i, choice := range createChoices {
@@ -408,7 +428,7 @@ func showFromLocalMenu(m model) string {
 		s += fmt.Sprintf("%s %s\n", cursor, choice)
 	}
 
-	s += "\nPress [ctrl+c] to cancel, press [enter] to confirm.\n"
+	s += "\nPress [ctrl+c] to cancel, press [enter] to toggle true/false.\n"
 	return s
 }
 
