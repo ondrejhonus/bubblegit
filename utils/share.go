@@ -19,12 +19,14 @@ type Model struct {
 	IsPublic      bool
 	Source        string
 	CreateClone   bool
+	BranchName    string // Checkout
+	CreateBranch  bool
 }
 
 // Exported function to create a new model
 func InitialModel() Model {
 	return Model{
-		Choices:     []string{"Add", "Commit", "Push", "Init", "Create repo"},
+		Choices:     []string{"Add", "Commit", "Push", "Branch", "Init", "Create repo"},
 		Selected:    make(map[int]struct{}),
 		State:       "menu", // default state
 		IsPublic:    true,
