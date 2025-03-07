@@ -77,6 +77,7 @@ func menuFunctions(m model, msg tea.Msg) (model, tea.Cmd) {
 				// Push
 
 				output := runCommand("git", "push")
+				m = showStatus(m, output)
 				showStatus(m, output)
 			case 3:
 				output := runCommand("git", "init")
