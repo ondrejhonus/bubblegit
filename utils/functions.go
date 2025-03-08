@@ -15,10 +15,3 @@ func RunCommand(name string, args ...string) string {
 	}
 	return string(output)
 }
-
-// Show status messages after running a command
-func ShowStatus(m Model, msg string) Model {
-	m.StatusMessage = msg
-	m.State = "status"
-	return m
-}

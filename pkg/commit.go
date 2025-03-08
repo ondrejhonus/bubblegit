@@ -59,7 +59,8 @@ func TypeCommitDesc(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 		case "ctrl+s", "enter":
 			// Commit when description is entered
 			output := utils.RunCommand("git", "commit", "-m", m.CommitMessage, "-m", m.CommitDesc)
-			utils.ShowStatus(m, output)
+			m.StatusMessage = output
+			m.State = "status"
 			m.CommitDesc = ""
 		case "backspace":
 			// Handle backspace for commit description

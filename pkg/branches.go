@@ -78,7 +78,8 @@ func CheckoutBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			switch m.Cursor {
 			case 0:
 				if m.BranchName == "" {
-					utils.ShowStatus(m, "Branch name cannot be empty")
+					m.StatusMessage = "Branch name cannot be empty"
+					m.State = "status"
 				} else {
 					m.Cursor++
 				}
@@ -87,8 +88,10 @@ func CheckoutBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor++
 			case 2:
 				if m.CreateBranch {
+					utils.RunCommand("git", "stash")
 					output := utils.RunCommand("git", "checkout", "-b", m.BranchName)
-					utils.ShowStatus(m, output)
+					m.StatusMessage = output
+					m.State = "status"
 
 				} else {
 					utils.RunCommand("git", "checkout", m.BranchName)
@@ -128,7 +131,7 @@ func ShowCheckoutBranch(m utils.Model) string {
 	branchChoices := []string{
 		fmt.Sprintf("Branch name: %s", m.BranchName),
 		fmt.Sprintf("Create branch: %t", m.CreateBranch),
-		"[Checkout branch]",
+		"[Checkout/Stash branch]",
 	}
 
 	for i, choice := range branchChoices {
@@ -149,15 +152,16 @@ func SetUpstream(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 		case "enter":
 			if m.BranchName == "" {
 				currentBranch := utils.RunCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
-				output := utils.RunCommand("git", "branch", "--set-upstream-to", "origin/"+currentBranch)
-				utils.ShowStatus(m, output)
-				m.State = "menu"
+				output := utils.RunCommand("git", "push", "--set-upstream", "origin", currentBranch)
+				m.StatusMessage = output
+				m.State = "status"
+
 				m.Cursor = 0
 				m.BranchName = ""
 			} else {
 				output := utils.RunCommand("git", "branch", "--set-upstream-to", m.BranchName)
-				utils.ShowStatus(m, output)
-				m.State = "menu"
+				m.StatusMessage = output
+				m.State = "status"
 				m.Cursor = 0
 				m.BranchName = ""
 			}
@@ -179,6 +183,60 @@ func ShowSetUpstream(m utils.Model) string {
 	s := "Set upstream\n\n"
 	branchChoices := []string{
 		fmt.Sprintf("Branch name (blank for current): %s", m.BranchName),
+	}
+	for i, choice := range branchChoices {
+		cursor := " "
+		if m.Cursor == i {
+			cursor = ">"
+		}
+		s += fmt.Sprintf("%s %s\n", cursor, choice)
+	}
+
+	s += "\nPress [ctrl+c] to cancel, press [enter] to confirm.\n"
+	return s
+}
+
+func DeleteBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
+	if keyMsg, ok := msg.(tea.KeyMsg); ok {
+		switch keyMsg.String() {
+		case "enter":
+			switch m.Cursor {
+			case 0:
+				m.Cursor++
+			case 1:
+				if m.BranchName != "" {
+					output := utils.RunCommand("git", "branch", "-D", m.BranchName)
+					m.StatusMessage = output
+					m.State = "status"
+					m.Cursor = 0
+					m.BranchName = ""
+				} else {
+					m.StatusMessage = "Branch name cannot be empty"
+					m.State = "status"
+				}
+			}
+		case "ctrl+c":
+			m.State = "menu"
+			m.BranchName = ""
+		case "backspace":
+			if len(m.BranchName) > 0 {
+				m.BranchName = m.BranchName[:len(m.BranchName)-1]
+			}
+		default:
+			switch m.Cursor {
+			case 0:
+				m.BranchName += keyMsg.String()
+			}
+		}
+	}
+	return m, nil
+}
+
+func ShowDeleteBranch(m utils.Model) string {
+	s := "Delete branch\n\n"
+	branchChoices := []string{
+		fmt.Sprintf("Branch name: %s", m.BranchName),
+		"[Delete branch]",
 	}
 	for i, choice := range branchChoices {
 		cursor := " "
