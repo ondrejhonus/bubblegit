@@ -20,16 +20,22 @@ func BranchControl(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			switch m.Cursor {
 			case 0:
 				m.State = "checkoutBranch"
+				m.Cursor = 0
 			case 1:
 				m.State = "setUpstream"
+				m.Cursor = 0
 			case 2:
 				m.State = "deleteBranch"
+				m.Cursor = 0
 			case 3:
 				m.State = "renameBranch"
+				m.Cursor = 0
 			case 4:
 				m.State = "mergeBranch"
+				m.Cursor = 0
 			case 5:
 				m.State = "rebaseBranch"
+				m.Cursor = 0
 			}
 		case "up", "k":
 			if m.Cursor > 0 {
@@ -159,7 +165,7 @@ func SetUpstream(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor = 0
 				m.BranchName = ""
 			} else {
-				output := utils.RunCommand("git", "branch", "--set-upstream-to", m.BranchName)
+				output := utils.RunCommand("git", "push", "--set-upstream", "origin", m.BranchName)
 				m.StatusMessage = output
 				m.State = "status"
 				m.Cursor = 0

@@ -50,6 +50,8 @@ func (m localModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Model, cmd = pkg.CheckoutBranch(m.Model, msg)
 	case "setUpstream":
 		m.Model, cmd = pkg.SetUpstream(m.Model, msg)
+	case "deleteBranch":
+		m.Model, cmd = pkg.DeleteBranch(m.Model, msg)
 	}
 
 	return m, cmd
@@ -81,6 +83,8 @@ func (m localModel) View() string {
 		return pkg.ShowCheckoutBranch(m.Model)
 	case "setUpstream":
 		return pkg.ShowSetUpstream(m.Model)
+	case "deleteBranch":
+		return pkg.ShowDeleteBranch(m.Model)
 	}
 
 	return ""
