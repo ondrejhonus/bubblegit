@@ -1,35 +1,3 @@
-/* Some gh commands ill use:
-1. gh repo create <repo-name> --description "<repo-description>" --public --source .
-2. gh repo create <repo-name> --description "<repo-description>" --private --source .
-This one creates a local folder and makes a gh repo
-3. gh repo create my-project --public --clone
-*/
-
-/*
-gh repo create <repo-name> --description "<repo-description>" --? --source .
->	Create repo from ./
-	>	Repo name: [Default: {wd}]
-		Repo description:
-		Source: [Default: .]
-		[*] Public
-		[ ] Readme
-		[ ] .gitignore
-
-gh repo create <repo-name> --description "<repo-description>" --public --clone
-	Create empty remote and clone it
-	>	Repo name:
-		Repo description
-		[*] Public
-		[ ] Readme
-		[ ] .gitignore
-	Create empty remote repo
-	>	Repo name:
-		Repo description
-		[*] Public
-		[ ] Readme
-		[ ] .gitignore
-*/
-
 package pkg
 
 import (
@@ -82,7 +50,7 @@ func ShowCreateRepoMenu(m utils.Model) string {
 		s += fmt.Sprintf("%s %s\n", cursor, choice)
 	}
 
-	s += "\nPress [ctrl+c] to cancel, press [enter] to confirm.\n"
+	s += "\nPress [ctrl+c] or [q] to go back, [enter] to confirm.\n"
 	return s
 }
 

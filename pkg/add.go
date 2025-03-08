@@ -45,7 +45,6 @@ func AddFile(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 		switch keyMsg.String() {
 		case "enter":
 			utils.RunCommand("git", "add", m.CommitMessage)
-			m.State = "menu"
 			m.CommitMessage = ""
 		case "ctrl+c":
 			m.State = "menu"
@@ -74,6 +73,6 @@ func ShowAddMenu(m utils.Model) string {
 		s += fmt.Sprintf("%s %s\n", cursor, choice)
 	}
 
-	s += "\nPress [ctrl+c] to cancel.\n"
+	s += "\nPress [ctrl+c] or [q] to go back.\n"
 	return s
 }

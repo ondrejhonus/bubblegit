@@ -73,7 +73,7 @@ func ShowBranchesMenu(m utils.Model) string {
 		s += fmt.Sprintf("%s %s\n", cursor, choice)
 	}
 
-	s += "\nPress [ctrl+c] to go back.\n"
+	s += "\nPress [ctrl+c] or [q] to go back.\n"
 	return s
 }
 
@@ -149,7 +149,7 @@ func ShowCheckoutBranch(m utils.Model) string {
 		s += fmt.Sprintf("%s %s\n", cursor, choice)
 	}
 
-	s += "\nPress [ctrl+c] to cancel, press [enter] to confirm or change bool value.\n"
+	s += "\nPress [ctrl+c] to go back, press [enter] to confirm or toggle true/false.\n"
 	return s
 }
 
@@ -199,7 +199,7 @@ func ShowSetUpstream(m utils.Model) string {
 		s += fmt.Sprintf("%s %s\n", cursor, choice)
 	}
 
-	s += "\nPress [ctrl+c] to cancel, press [enter] to confirm.\n"
+	s += "\nPress [ctrl+c] to go back, press [enter] to confirm.\n"
 	return s
 }
 
@@ -253,7 +253,7 @@ func ShowDeleteBranch(m utils.Model) string {
 		s += fmt.Sprintf("%s %s\n", cursor, choice)
 	}
 
-	s += "\nPress [ctrl+c] to cancel, press [enter] to confirm.\n"
+	s += "\nPress [ctrl+c] to go back, press [enter] to confirm.\n"
 	return s
 }
 
@@ -325,7 +325,7 @@ func ShowRenameBranch(m utils.Model) string {
 		s += fmt.Sprintf("%s %s\n", cursor, choice)
 	}
 
-	s += "\nPress [ctrl+c] to cancel, press [enter] to confirm.\n"
+	s += "\nPress [ctrl+c] to go back, press [enter] to confirm.\n"
 	return s
 }
 
@@ -397,7 +397,7 @@ func ShowMergeBranch(m utils.Model) string {
 		s += fmt.Sprintf("%s %s\n", cursor, choice)
 	}
 
-	s += "\nPress [ctrl+c] to cancel, press [enter] to confirm.\n"
+	s += "\nPress [ctrl+c] to go back, press [enter] to confirm.\n"
 	return s
 }
 
@@ -469,6 +469,6 @@ func ShowRebaseBranch(m utils.Model) string {
 		s += fmt.Sprintf("%s %s\n", cursor, choice)
 	}
 
-	s += "\nPress [ctrl+c] to cancel, press [enter] to confirm.\n"
+	s += "\nPress [ctrl+c] to go back, press [enter] to confirm.\n"
 	return s
 }

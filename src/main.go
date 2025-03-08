@@ -76,7 +76,7 @@ func (m localModel) View() string {
 	case "addFile":
 		return fmt.Sprintf("Enter file name to add: %s\n\nPress [enter] to add or [ctrl+c] to cancel.\n", m.CommitMessage)
 	case "status":
-		return fmt.Sprintf("%s\n\nPress [enter] to return to menu.", m.StatusMessage)
+		return fmt.Sprintf("%s\n\nPress [enter]/[q] to close.", m.StatusMessage)
 	case "createRepo":
 		return pkg.ShowCreateRepoMenu(m.Model)
 	case "fromLocal":

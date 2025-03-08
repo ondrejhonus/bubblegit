@@ -71,6 +71,6 @@ func ShowMenu(m utils.Model) string {
 		s += fmt.Sprintf("%s %s\n", cursor, choice)
 	}
 
-	s += "\nPress [q] to quit.\n"
+	s += "\nPress [ctrl+c] or [q] to go back.\n"
 	return s
 }
