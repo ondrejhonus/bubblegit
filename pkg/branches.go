@@ -3,6 +3,7 @@ package pkg
 import (
 	"bubblegit/utils"
 	"fmt"
+	"strings"
 
 	// Replace with the actual module path to your main package
 	tea "github.com/charmbracelet/bubbletea"
@@ -262,16 +263,16 @@ func RenameBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 		case "enter":
 			switch m.Cursor {
 			case 0:
-				if m.OldBranchName == "" {
-					m.OldBranchName = utils.RunCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
-				}
 				m.Cursor++
 			case 1:
 				m.Cursor++
 			case 2:
 				if m.BranchName != "" {
+					if m.OldBranchName == "" {
+						m.OldBranchName = strings.TrimSpace(utils.RunCommand("git", "rev-parse", "--abbrev-ref", "HEAD"))
+					}
 					output := utils.RunCommand("git", "branch", "-m", m.OldBranchName, m.BranchName)
-					m.StatusMessage = output
+					m.StatusMessage = output + m.OldBranchName + " to " + m.BranchName
 					m.State = "status"
 					m.Cursor = 0
 					m.BranchName = ""
@@ -281,6 +282,14 @@ func RenameBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 					m.State = "status"
 					m.Cursor = 0
 				}
+			}
+		case "up":
+			if m.Cursor > 0 {
+				m.Cursor--
+			}
+		case "down", "tab":
+			if m.Cursor < 2 {
+				m.Cursor++
 			}
 		case "ctrl+c":
 			m.State = "menu"
@@ -292,6 +301,8 @@ func RenameBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 		default:
 			switch m.Cursor {
 			case 0:
+				m.OldBranchName += keyMsg.String()
+			case 1:
 				m.BranchName += keyMsg.String()
 			}
 		}
