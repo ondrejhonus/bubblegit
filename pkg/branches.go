@@ -154,6 +154,7 @@ func SetUpstream(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.State = "menu"
 				m.Cursor = 0
 				m.BranchName = ""
+				// testing a branch
 			} else {
 				output := utils.RunCommand("git", "branch", "--set-upstream-to", m.BranchName)
 				utils.ShowStatus(m, output)
