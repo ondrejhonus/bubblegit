@@ -158,7 +158,7 @@ func SetUpstream(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 		switch keyMsg.String() {
 		case "enter":
 			if m.BranchName == "" {
-				currentBranch := utils.RunCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
+				currentBranch := strings.TrimSpace(utils.RunCommand("git", "rev-parse", "--abbrev-ref", "HEAD"))
 				output := utils.RunCommand("git", "push", "--set-upstream", "origin", currentBranch)
 				m.StatusMessage = output
 				m.State = "status"
