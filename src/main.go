@@ -54,6 +54,8 @@ func (m localModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Model, cmd = pkg.DeleteBranch(m.Model, msg)
 	case "renameBranch":
 		m.Model, cmd = pkg.RenameBranch(m.Model, msg)
+	case "mergeBranch":
+		m.Model, cmd = pkg.MergeBranch(m.Model, msg)
 	}
 
 	return m, cmd
@@ -89,6 +91,8 @@ func (m localModel) View() string {
 		return pkg.ShowDeleteBranch(m.Model)
 	case "renameBranch":
 		return pkg.ShowRenameBranch(m.Model)
+	case "mergeBranch":
+		return pkg.ShowMergeBranch(m.Model)
 	}
 
 	return ""
