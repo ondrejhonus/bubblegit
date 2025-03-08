@@ -21,6 +21,7 @@ type Model struct {
 	CreateClone   bool
 	BranchName    string // Checkout
 	CreateBranch  bool
+	OldBranchName string // Branch
 }
 
 // Exported function to create a new model

@@ -255,3 +255,65 @@ func ShowDeleteBranch(m utils.Model) string {
 	s += "\nPress [ctrl+c] to cancel, press [enter] to confirm.\n"
 	return s
 }
+
+func RenameBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
+	if keyMsg, ok := msg.(tea.KeyMsg); ok {
+		switch keyMsg.String() {
+		case "enter":
+			switch m.Cursor {
+			case 0:
+				if m.OldBranchName == "" {
+					m.OldBranchName = utils.RunCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
+				}
+				m.Cursor++
+			case 1:
+				m.Cursor++
+			case 2:
+				if m.BranchName != "" {
+					output := utils.RunCommand("git", "branch", "-m", m.OldBranchName, m.BranchName)
+					m.StatusMessage = output
+					m.State = "status"
+					m.Cursor = 0
+					m.BranchName = ""
+					m.OldBranchName = ""
+				} else {
+					m.StatusMessage = "Branch name cannot be empty"
+					m.State = "status"
+					m.Cursor = 0
+				}
+			}
+		case "ctrl+c":
+			m.State = "menu"
+			m.BranchName = ""
+		case "backspace":
+			if len(m.BranchName) > 0 {
+				m.BranchName = m.BranchName[:len(m.BranchName)-1]
+			}
+		default:
+			switch m.Cursor {
+			case 0:
+				m.BranchName += keyMsg.String()
+			}
+		}
+	}
+	return m, nil
+}
+
+func ShowRenameBranch(m utils.Model) string {
+	s := "Rename branch\n\n"
+	branchChoices := []string{
+		fmt.Sprintf("Branch name (blank for current): %s", m.OldBranchName),
+		fmt.Sprintf("New branch name: %s", m.BranchName),
+		"[Rename branch]",
+	}
+	for i, choice := range branchChoices {
+		cursor := " "
+		if m.Cursor == i {
+			cursor = ">"
+		}
+		s += fmt.Sprintf("%s %s\n", cursor, choice)
+	}
+
+	s += "\nPress [ctrl+c] to cancel, press [enter] to confirm.\n"
+	return s
+}
