@@ -343,7 +343,8 @@ func MergeBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 					if m.OldBranchName == "" {
 						m.OldBranchName = strings.TrimSpace(utils.RunCommand("git", "rev-parse", "--abbrev-ref", "HEAD"))
 					}
-					output := utils.RunCommand("git", "merge", m.OldBranchName, m.BranchName)
+					output := utils.RunCommand("git", "checkout", m.BranchName)
+					output += utils.RunCommand("git", "merge", m.OldBranchName, m.BranchName)
 					m.StatusMessage = output + "\n\n merged " + m.OldBranchName + " into " + m.BranchName
 					m.State = "status"
 					m.Cursor = 0
