@@ -118,7 +118,7 @@ func CheckoutBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			}
 		case "ctrl+c":
 			m.State = "menu"
-			m.CommitMessage = ""
+			m.BranchName = ""
 		case "backspace":
 			if m.Cursor == 0 && len(m.BranchName) > 0 {
 				m.BranchName = m.BranchName[:len(m.BranchName)-1]
