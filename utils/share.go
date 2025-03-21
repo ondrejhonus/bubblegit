@@ -27,7 +27,7 @@ type Model struct {
 // Exported function to create a new model
 func InitialModel() Model {
 	return Model{
-		Choices:     []string{"Add", "Commit", "Push", "Branch", "Init", "Create repo"},
+		Choices:     []string{"Add", "Commit", "Push", "Clone", "Branch", "Init", "Create repo"},
 		Selected:    make(map[int]struct{}),
 		State:       "menu", // default state
 		IsPublic:    true,

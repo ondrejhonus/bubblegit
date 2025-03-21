@@ -38,19 +38,22 @@ func MenuFunctions(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor = 0
 			case 2:
 				// Push
-
 				output := utils.RunCommand("git", "push")
 				m.StatusMessage = output
 				m.State = "status"
 			case 3:
+				// Clone
+				m.State = "clone"
+				m.Cursor = 0
+			case 4:
 				// Branch
 				m.State = "branches"
 				m.Cursor = 0
-			case 4:
+			case 5:
 				output := utils.RunCommand("git", "init")
 				m.StatusMessage = output
 				m.State = "status"
-			case 5:
+			case 6:
 				m.State = "createRepo"
 				m.Cursor = 0
 			}
