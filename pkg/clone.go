@@ -22,12 +22,13 @@ func CloneRepo(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 					m.Cursor++
 				}
 			case 1:
-				output := utils.RunCommand("git", "clone", m.BranchName)
+				println(m.RepoName)
+				output := utils.RunCommand("git", "clone", m.RepoName)
 				m.StatusMessage = output
 				m.State = "status"
 				m.State = "menu"
 				m.Cursor = 0
-				m.BranchName = ""
+				m.RepoName = ""
 				m.CreateBranch = false
 			}
 		case "up":
@@ -40,14 +41,14 @@ func CloneRepo(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			}
 		case "ctrl+c":
 			m.State = "menu"
-			m.BranchName = ""
+			m.RepoName = ""
 		case "backspace":
-			if m.Cursor == 0 && len(m.BranchName) > 0 {
-				m.BranchName = m.BranchName[:len(m.BranchName)-1]
+			if m.Cursor == 0 && len(m.RepoName) > 0 {
+				m.RepoName = m.RepoName[:len(m.RepoName)-1]
 			}
 		default:
 			if m.Cursor == 0 {
-				m.BranchName += keyMsg.String()
+				m.RepoName += keyMsg.String()
 			}
 		}
 	}
@@ -58,7 +59,7 @@ func CloneRepo(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 func ShowCloneRepo(m utils.Model) string {
 	s := "Enter git repo link\n\n"
 	branchChoices := []string{
-		fmt.Sprintf("Git clone URL: %s", m.BranchName),
+		fmt.Sprintf("Git clone URL: %s", m.RepoName),
 		"[Clone repo]",
 	}
 

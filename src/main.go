@@ -107,7 +107,7 @@ func (m localModel) View() string {
 }
 
 func main() {
-	p := tea.NewProgram(localModel{Model: utils.InitialModel()})
+	p := tea.NewProgram(localModel{Model: utils.InitialModel()}, tea.WithoutBracketedPaste())
 
 	if _, err := p.Run(); err != nil {
 		log.Fatal(err)
