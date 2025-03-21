@@ -77,7 +77,7 @@ func ShowBranchesMenu(m utils.Model) string {
 	return s
 }
 
-// Get keypresses and update the file name to add
+// Get keypresses and update the strings
 func CheckoutBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		switch keyMsg.String() {
