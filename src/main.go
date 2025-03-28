@@ -64,6 +64,8 @@ func (m localModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Model, cmd = pkg.PullRequestSubmenu(m.Model, msg)
 	case "createPR":
 		m.Model, cmd = pkg.CreatePR(m.Model, msg)
+	case "checkoutPR":
+		m.Model, cmd = pkg.CheckoutPR(m.Model, msg)
 	}
 
 	return m, cmd
@@ -109,6 +111,8 @@ func (m localModel) View() string {
 		return pkg.ShowPullRequestSubmenu(m.Model)
 	case "createPR":
 		return pkg.ShowCreatePR(m.Model)
+	case "checkoutPR":
+		return pkg.ShowCheckoutPR(m.Model)
 	}
 
 	return ""

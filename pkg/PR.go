@@ -3,6 +3,7 @@ package pkg
 import (
 	"bubblegit/utils"
 	"fmt"
+	"strconv"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -36,11 +37,21 @@ func PullRequestSubmenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.State = "createPR"
 				m.Cursor = 0
 			case 1:
-				m.Cursor++
+				// List
+				output := utils.RunCommand("gh", "pr", "ls")
+				m.StatusMessage = output
+				m.State = "status"
+				m.Cursor = 0
 			case 2:
-				m.Cursor++
+				// Status
+				output := utils.RunCommand("gh", "pr", "status")
+				m.StatusMessage = output
+				m.State = "status"
+				m.Cursor = 0
 			case 3:
-				m.Cursor++
+				// Checkout
+				m.State = "checkoutPR"
+				m.Cursor = 0
 			case 4:
 				m.Cursor++
 			case 5:
@@ -164,7 +175,9 @@ func CreatePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 		case "ctrl+s":
 			m.Source = strings.TrimSpace(utils.RunCommand("git", "rev-parse", "--abbrev-ref", "HEAD"))
 			m.Target = "main"
-			utils.RunCommand("gh", "pr", "create", "-B", m.Target, "-H", m.Source)
+			output := utils.RunCommand("gh", "pr", "create", "-B", m.Target, "-H", m.Source)
+			m.StatusMessage = output
+			m.State = "status"
 			m.Source = ""
 			m.Target = ""
 			m.Target = ""
@@ -196,5 +209,59 @@ func ShowCreatePR(m utils.Model) string {
 		fmt.Sprintf("[PR %s > %s]", m.Source, m.Target),
 	}
 	top_msg := "Press [ctrl+c] to go back to the main menu, [ctrl+s] to quick PR"
+	return utils.ShowMenu(m, "Create a pull request", createChoices, top_msg)
+}
+
+func CheckoutPR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
+	if keyMsg, ok := msg.(tea.KeyMsg); ok {
+		switch keyMsg.String() {
+		case "enter":
+			output := ""
+			if m.ID == "" {
+				m.StatusMessage = "ID can't be blank"
+				m.State = "status"
+				m.ID = ""
+				break
+			} else if _, err := strconv.Atoi(m.ID); err != nil {
+				m.StatusMessage = "ID has to be a valid number"
+				m.State = "status"
+				m.ID = ""
+				break
+			} else {
+				output = utils.RunCommand("gh", "pr", "checkout", m.ID)
+			}
+			m.StatusMessage = output
+			m.State = "status"
+			m.ID = ""
+		case "up":
+			if m.Cursor > 0 {
+				m.Cursor--
+			}
+		case "down", "tab":
+			if m.Cursor < 9 {
+				m.Cursor++
+			}
+		case "ctrl+c":
+			m.State = "menu"
+			m.ID = ""
+		case "backspace":
+			if len(m.ID) > 0 {
+				m.ID = m.ID[:len(m.ID)-1]
+			}
+		default:
+			switch m.Cursor {
+			case 0:
+				m.ID += keyMsg.String()
+			}
+		}
+	}
+	return m, nil
+}
+
+func ShowCheckoutPR(m utils.Model) string {
+	createChoices := []string{
+		fmt.Sprintf("PR ID: %s", m.ID),
+	}
+	top_msg := "Press [ctrl+c] to go back to the main menu, [enter] to checkout"
 	return utils.ShowMenu(m, "Create a pull request", createChoices, top_msg)
 }

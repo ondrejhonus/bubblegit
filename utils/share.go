@@ -29,6 +29,7 @@ type Model struct {
 	Target      string
 	Title       string
 	BodyMessage string
+	ID          string
 }
 
 // Exported function to create a new model
