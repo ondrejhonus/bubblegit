@@ -53,7 +53,9 @@ func PullRequestSubmenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.State = "checkoutPR"
 				m.Cursor = 0
 			case 4:
-				m.Cursor++
+				// View PR
+				m.State = "viewPR"
+				m.Cursor = 0
 			case 5:
 				m.Cursor++
 			case 6:
@@ -264,5 +266,60 @@ func ShowCheckoutPR(m utils.Model) string {
 	}
 	topMsg := "Checkout a PR"
 	btmMsg := "Press [ctrl+c] to go back to the main menu, [enter] to checkout"
+	return utils.ShowMenu(m, topMsg, createChoices, btmMsg)
+}
+
+func ViewPR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
+	if keyMsg, ok := msg.(tea.KeyMsg); ok {
+		switch keyMsg.String() {
+		case "enter":
+			output := ""
+			if m.ID == "" {
+				m.StatusMessage = "ID can't be blank"
+				m.State = "status"
+				m.ID = ""
+				break
+			} else if _, err := strconv.Atoi(m.ID); err != nil {
+				m.StatusMessage = "ID has to be a valid number"
+				m.State = "status"
+				m.ID = ""
+				break
+			} else {
+				output = utils.RunCommand("gh", "pr", "view", m.ID)
+			}
+			m.StatusMessage = output
+			m.State = "status"
+			m.ID = ""
+		case "up":
+			if m.Cursor > 0 {
+				m.Cursor--
+			}
+		case "down", "tab":
+			if m.Cursor < 9 {
+				m.Cursor++
+			}
+		case "ctrl+c", "q":
+			m.State = "menu"
+			m.ID = ""
+		case "backspace":
+			if len(m.ID) > 0 {
+				m.ID = m.ID[:len(m.ID)-1]
+			}
+		case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
+			switch m.Cursor {
+			case 0:
+				m.ID += keyMsg.String()
+			}
+		}
+	}
+	return m, nil
+}
+
+func ShowViewPR(m utils.Model) string {
+	createChoices := []string{
+		fmt.Sprintf("PR ID: %s", m.ID),
+	}
+	topMsg := "View PR"
+	btmMsg := "Press [ctrl+c] to go back to the main menu, [enter] to view"
 	return utils.ShowMenu(m, topMsg, createChoices, btmMsg)
 }
