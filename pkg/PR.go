@@ -8,45 +8,61 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-func PullRequest(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
+/*
+gh pr create --base [target] 	   --head [source]
+gh pr create --base my-base-branch --head my-changed-branch
+*/
+
+/*
+1. create
+2. list
+3. status
+4. checkout
+5. view
+6. approve
+8. close
+7. merge
+8. reopen
+9. delete
+*/
+
+func PullRequestSubmenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		switch keyMsg.String() {
 		case "enter":
 			switch m.Cursor {
 			case 0:
-				m.Cursor++
+				// Create PR
+				m.State = "createPR"
+				m.Cursor = 0
 			case 1:
 				m.Cursor++
 			case 2:
-				if m.BranchName != "" {
-					m.BranchName = "main"
-				}
-				if m.OldBranchName == "" {
-					m.OldBranchName = strings.TrimSpace(utils.RunCommand("git", "rev-parse", "--abbrev-ref", "HEAD"))
-				}
-				output := utils.RunCommand("git", "checkout", m.BranchName)
-				output += utils.RunCommand("git", "merge", m.OldBranchName, m.BranchName)
-				m.StatusMessage = output + "\n\n merged " + m.OldBranchName + " into " + m.BranchName
-				m.State = "status"
-				m.Cursor = 0
-				m.BranchName = ""
-				m.OldBranchName = ""
+				m.Cursor++
+			case 3:
+				m.Cursor++
+			case 4:
+				m.Cursor++
+			case 5:
+				m.Cursor++
+			case 6:
+				m.Cursor++
+			case 7:
+				m.Cursor++
+			case 8:
+				m.Cursor++
 			}
 		case "up":
 			if m.Cursor > 0 {
 				m.Cursor--
 			}
 		case "down", "tab":
-			if m.Cursor < 2 {
+			if m.Cursor < 9 {
 				m.Cursor++
 			}
-		case "ctrl+c":
+		case "ctrl+c", "q":
 			m.State = "menu"
 			m.BranchName = ""
-		case "backspace":
-			if len(m.BranchName) > 0 {
-				m.BranchName = m.BranchName[:len(m.BranchName)-1]
-			}
 		default:
 			switch m.Cursor {
 			case 0:
@@ -59,21 +75,126 @@ func PullRequest(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 	return m, nil
 }
 
-func ShowPullRequest(m utils.Model) string {
-	s := "Pull request\n\n"
-	branchChoices := []string{
-		fmt.Sprintf("Source branch (blank for current): %s", m.OldBranchName),
-		fmt.Sprintf("Target branch (blank for main): %s", m.BranchName),
-		"[Merge branches]",
+func ShowPullRequestSubmenu(m utils.Model) string {
+	prChoices := []string{
+		"1. Create a pull request",
+		"2. List pull requests",
+		"3. Check pull request status",
+		"4. Checkout a pull request",
+		"5. View a pull request",
+		"6. Approve a pull request",
+		"7. Close a pull request",
+		"8. Merge a pull request",
+		"9. Reopen a pull request",
+		"10. Delete a pull request",
 	}
-	for i, choice := range branchChoices {
-		cursor := " "
-		if m.Cursor == i {
-			cursor = ">"
-		}
-		s += fmt.Sprintf("%s %s\n", cursor, choice)
-	}
+	top_msg := "Press [q] or [ctrl+c] to go back to the main menu"
+	return utils.ShowMenu(m, "Pull request", prChoices, top_msg)
+}
 
-	s += "\nPress [ctrl+c] to go back, press [enter] to confirm.\n"
-	return s
+func CreatePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
+	if keyMsg, ok := msg.(tea.KeyMsg); ok {
+		switch keyMsg.String() {
+		case "enter":
+			switch m.Cursor {
+			case 0:
+				m.Cursor++
+			case 1:
+				m.Cursor++
+			case 2:
+				m.Cursor++
+			case 3:
+				m.Cursor++
+			case 4:
+				if m.Source == "" {
+					m.Source = strings.TrimSpace(utils.RunCommand("git", "rev-parse", "--abbrev-ref", "HEAD"))
+				}
+				if m.Target == "" {
+					m.Target = "main"
+				}
+				output := ""
+				if m.BodyMessage == "" && m.Title == "" {
+					output = utils.RunCommand("gh", "pr", "create", "-B", m.Target, "-H", m.Source)
+				} else if m.BodyMessage == "" && m.Title != "" {
+					output = utils.RunCommand("gh", "pr", "create", "-B", m.Target, "-H", m.Source, "--title", m.Title)
+				} else if m.Title == "" && m.BodyMessage != "" {
+					output = utils.RunCommand("gh", "pr", "create", "-B", m.Target, "-H", m.Source, "--body", m.BodyMessage)
+				} else {
+					output = utils.RunCommand("gh", "pr", "create", "-B", m.Target, "-H", m.Source, "--title", m.Title, "--body", m.BodyMessage)
+				}
+				m.StatusMessage = output
+				m.State = "status"
+				m.Source = ""
+				m.Target = ""
+				m.Target = ""
+				m.BodyMessage = ""
+				m.Cursor = 0
+
+			}
+		case "up":
+			if m.Cursor > 0 {
+				m.Cursor--
+			}
+		case "down", "tab":
+			if m.Cursor < 9 {
+				m.Cursor++
+			}
+		case "ctrl+c":
+			m.State = "menu"
+			m.BranchName = ""
+		case "backspace":
+			switch m.Cursor {
+			case 0:
+				if len(m.Source) > 0 {
+					m.Source = m.Source[:len(m.Source)-1]
+				}
+			case 1:
+				if len(m.Target) > 0 {
+					m.Target = m.Target[:len(m.Target)-1]
+				}
+			case 2:
+				if len(m.Title) > 0 {
+					m.Title = m.Title[:len(m.Title)-1]
+				}
+			case 3:
+				if len(m.BodyMessage) > 0 {
+					m.BodyMessage = m.BodyMessage[:len(m.BodyMessage)-1]
+				}
+			}
+		case "ctrl+s":
+			m.Source = strings.TrimSpace(utils.RunCommand("git", "rev-parse", "--abbrev-ref", "HEAD"))
+			m.Target = "main"
+			utils.RunCommand("gh", "pr", "create", "-B", m.Target, "-H", m.Source)
+			m.Source = ""
+			m.Target = ""
+			m.Target = ""
+			m.BodyMessage = ""
+			m.Cursor = 0
+
+		default:
+			switch m.Cursor {
+			case 0:
+				m.Source += keyMsg.String()
+			case 1:
+				m.Target += keyMsg.String()
+			case 2:
+				m.Title += keyMsg.String()
+			case 3:
+				m.BodyMessage += keyMsg.String()
+			}
+		}
+	}
+	return m, nil
+}
+
+func ShowCreatePR(m utils.Model) string {
+	createChoices := []string{
+		fmt.Sprintf("Source branch (blank for current): %s", m.Source),
+		fmt.Sprintf("Target branch (blank for main): %s", m.Target),
+		fmt.Sprintf("Title (blank for default): %s", m.Title),
+		fmt.Sprintf("Body message (can be empty): %s", m.BodyMessage),
+		fmt.Sprintf("[PR %s > %s]", m.Source, m.Target),
+	}
+	top_msg := "Press [ctrl+c] to go back to the main menu, [ctrl+s] to quick PR"
+	return utils.ShowMenu(m, "Create a pull request", createChoices, top_msg)
 }

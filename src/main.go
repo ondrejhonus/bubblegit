@@ -60,6 +60,10 @@ func (m localModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Model, cmd = pkg.RebaseBranch(m.Model, msg)
 	case "clone":
 		m.Model, cmd = pkg.CloneRepo(m.Model, msg)
+	case "pullRequest":
+		m.Model, cmd = pkg.PullRequestSubmenu(m.Model, msg)
+	case "createPR":
+		m.Model, cmd = pkg.CreatePR(m.Model, msg)
 	}
 
 	return m, cmd
@@ -101,6 +105,10 @@ func (m localModel) View() string {
 		return pkg.ShowRebaseBranch(m.Model)
 	case "clone":
 		return pkg.ShowCloneRepo(m.Model)
+	case "pullRequest":
+		return pkg.ShowPullRequestSubmenu(m.Model)
+	case "createPR":
+		return pkg.ShowCreatePR(m.Model)
 	}
 
 	return ""

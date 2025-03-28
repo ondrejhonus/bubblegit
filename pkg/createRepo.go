@@ -41,7 +41,10 @@ func RepoCreate(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 
 func ShowCreateRepoMenu(m utils.Model) string {
 	s := "What would you want to do?\n\n"
-	createChoices := []string{"Create repo from ./", "Create empty remote"}
+	createChoices := []string{
+		"Create repo from ./",
+		"Create empty remote",
+	}
 	for i, choice := range createChoices {
 		cursor := " "
 		if m.Cursor == i {

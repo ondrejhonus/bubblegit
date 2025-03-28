@@ -11,23 +11,30 @@ type Model struct {
 	Selected      map[int]struct{}
 	StatusMessage string
 	State         string
-	IsTypingMsg   bool // Commit
+	// Commit
+	IsTypingMsg   bool
 	CommitMessage string
 	CommitDesc    string
-	RepoName      string // Repo create
-	RepoDesc      string
-	IsPublic      bool
-	Source        string
-	CreateClone   bool
-	BranchName    string // Checkout
+	// Repo create
+	RepoName    string
+	RepoDesc    string
+	IsPublic    bool
+	Source      string
+	CreateClone bool
+	// Checkouts and branches
+	BranchName    string
 	CreateBranch  bool
-	OldBranchName string // Branch
+	OldBranchName string
+	// PR
+	Target      string
+	Title       string
+	BodyMessage string
 }
 
 // Exported function to create a new model
 func InitialModel() Model {
 	return Model{
-		Choices:     []string{"Add", "Commit", "Push", "Clone", "Branch", "Init", "Create repo"},
+		Choices:     []string{"Add", "Commit", "Push", "Clone", "Branch", "Pull request", "Init", "Create repo"},
 		Selected:    make(map[int]struct{}),
 		State:       "menu", // default state
 		IsPublic:    true,
