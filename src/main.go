@@ -68,7 +68,8 @@ func (m localModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Model, cmd = pkg.CheckoutPR(m.Model, msg)
 	case "viewPR":
 		m.Model, cmd = pkg.ViewPR(m.Model, msg)
-
+	case "approvePR":
+		m.Model, cmd = pkg.ApprovePR(m.Model, msg)
 	}
 
 	return m, cmd
@@ -118,6 +119,8 @@ func (m localModel) View() string {
 		return pkg.ShowCheckoutPR(m.Model)
 	case "viewPR":
 		return pkg.ShowViewPR(m.Model)
+	case "approvePR":
+		return pkg.ShowApprovePR(m.Model)
 	}
 
 	return ""
