@@ -99,8 +99,8 @@ func ShowPullRequestSubmenu(m utils.Model) string {
 		"9. Reopen a pull request",
 		"10. Delete a pull request",
 	}
-	top_msg := "Press [q] or [ctrl+c] to go back to the main menu"
-	return utils.ShowMenu(m, "Pull request", prChoices, top_msg)
+	btmMsg := "Press [q] or [ctrl+c] to go back to the main menu"
+	return utils.ShowMenu(m, "Pull request", prChoices, btmMsg)
 }
 
 func CreatePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
@@ -180,7 +180,6 @@ func CreatePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			m.State = "status"
 			m.Source = ""
 			m.Target = ""
-			m.Target = ""
 			m.BodyMessage = ""
 			m.Cursor = 0
 
@@ -208,8 +207,9 @@ func ShowCreatePR(m utils.Model) string {
 		fmt.Sprintf("Body message (can be empty): %s", m.BodyMessage),
 		fmt.Sprintf("[PR %s > %s]", m.Source, m.Target),
 	}
-	top_msg := "Press [ctrl+c] to go back to the main menu, [ctrl+s] to quick PR"
-	return utils.ShowMenu(m, "Create a pull request", createChoices, top_msg)
+	topMsg := "Create a pull request"
+	btmMsg := "Press [ctrl+c] to go back to the main menu, [ctrl+s] to quick PR"
+	return utils.ShowMenu(m, topMsg, createChoices, btmMsg)
 }
 
 func CheckoutPR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
@@ -241,14 +241,14 @@ func CheckoutPR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			if m.Cursor < 9 {
 				m.Cursor++
 			}
-		case "ctrl+c":
+		case "ctrl+c", "q":
 			m.State = "menu"
 			m.ID = ""
 		case "backspace":
 			if len(m.ID) > 0 {
 				m.ID = m.ID[:len(m.ID)-1]
 			}
-		default:
+		case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
 			switch m.Cursor {
 			case 0:
 				m.ID += keyMsg.String()
@@ -262,6 +262,7 @@ func ShowCheckoutPR(m utils.Model) string {
 	createChoices := []string{
 		fmt.Sprintf("PR ID: %s", m.ID),
 	}
-	top_msg := "Press [ctrl+c] to go back to the main menu, [enter] to checkout"
-	return utils.ShowMenu(m, "Create a pull request", createChoices, top_msg)
+	topMsg := "Checkout a PR"
+	btmMsg := "Press [ctrl+c] to go back to the main menu, [enter] to checkout"
+	return utils.ShowMenu(m, topMsg, createChoices, btmMsg)
 }
