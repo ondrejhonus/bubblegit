@@ -3,7 +3,6 @@ package pkg
 import (
 	"bubblegit/utils"
 	"fmt"
-	"strconv"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -15,16 +14,16 @@ gh pr create --base my-base-branch --head my-changed-branch
 */
 
 /*
-1. create
-2. list
-3. status
-4. checkout
+1. create X
+2. list X
+3. status X
+4. checkout X
 5. view
-6. approve
-8. close
-7. merge
-8. reopen
-9. delete
+6. approve X
+7. close
+8. merge
+9. reopen
+10. delete
 */
 
 func PullRequestSubmenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
@@ -61,7 +60,9 @@ func PullRequestSubmenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.State = "approvePR"
 				m.Cursor = 0
 			case 6:
-				m.Cursor++
+				// Close
+				m.State = "closePR"
+				m.Cursor = 0
 			case 7:
 				m.Cursor++
 			case 8:
@@ -151,7 +152,7 @@ func CreatePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor--
 			}
 		case "down", "tab":
-			if m.Cursor < 9 {
+			if m.Cursor < 4 {
 				m.Cursor++
 			}
 		case "ctrl+c":
@@ -221,19 +222,7 @@ func CheckoutPR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 		switch keyMsg.String() {
 		case "enter":
 			output := ""
-			if m.ID == "" {
-				m.StatusMessage = "ID can't be blank"
-				m.State = "status"
-				m.ID = ""
-				break
-			} else if _, err := strconv.Atoi(m.ID); err != nil {
-				m.StatusMessage = "ID has to be a valid number"
-				m.State = "status"
-				m.ID = ""
-				break
-			} else {
-				output = utils.RunCommand("gh", "pr", "checkout", m.ID)
-			}
+			output = utils.RunCommand("gh", "pr", "checkout", m.ID)
 			m.StatusMessage = output
 			m.State = "status"
 			m.ID = ""
@@ -242,7 +231,7 @@ func CheckoutPR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor--
 			}
 		case "down", "tab":
-			if m.Cursor < 9 {
+			if m.Cursor < 1 {
 				m.Cursor++
 			}
 		case "ctrl+c", "q":
@@ -252,7 +241,7 @@ func CheckoutPR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			if len(m.ID) > 0 {
 				m.ID = m.ID[:len(m.ID)-1]
 			}
-		case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
+		default:
 			switch m.Cursor {
 			case 0:
 				m.ID += keyMsg.String()
@@ -264,7 +253,7 @@ func CheckoutPR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 
 func ShowCheckoutPR(m utils.Model) string {
 	createChoices := []string{
-		fmt.Sprintf("PR ID: %s", m.ID),
+		fmt.Sprintf("PR ID, URL or branch (blank for current): %s", m.ID),
 	}
 	topMsg := "Checkout a PR"
 	btmMsg := "Press [ctrl+c] to go back to the main menu, [enter] to checkout"
@@ -276,19 +265,7 @@ func ViewPR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 		switch keyMsg.String() {
 		case "enter":
 			output := ""
-			if m.ID == "" {
-				m.StatusMessage = "ID can't be blank"
-				m.State = "status"
-				m.ID = ""
-				break
-			} else if _, err := strconv.Atoi(m.ID); err != nil {
-				m.StatusMessage = "ID has to be a valid number"
-				m.State = "status"
-				m.ID = ""
-				break
-			} else {
-				output = utils.RunCommand("gh", "pr", "view", m.ID)
-			}
+			output = utils.RunCommand("gh", "pr", "view", m.ID)
 			m.StatusMessage = output
 			m.State = "status"
 			m.ID = ""
@@ -297,7 +274,7 @@ func ViewPR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor--
 			}
 		case "down", "tab":
-			if m.Cursor < 9 {
+			if m.Cursor < 1 {
 				m.Cursor++
 			}
 		case "ctrl+c", "q":
@@ -307,7 +284,7 @@ func ViewPR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			if len(m.ID) > 0 {
 				m.ID = m.ID[:len(m.ID)-1]
 			}
-		case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
+		default:
 			switch m.Cursor {
 			case 0:
 				m.ID += keyMsg.String()
@@ -319,10 +296,10 @@ func ViewPR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 
 func ShowViewPR(m utils.Model) string {
 	createChoices := []string{
-		fmt.Sprintf("PR ID: %s", m.ID),
+		fmt.Sprintf("PR ID, URL or branch (blank for current): %s", m.ID),
 	}
 	topMsg := "View PR"
-	btmMsg := "Press [ctrl+c] to go back to the main menu, [enter] to view"
+	btmMsg := "Press [ctrl+c] to go back to the main menu, [enter] to approve"
 	return utils.ShowMenu(m, topMsg, createChoices, btmMsg)
 }
 
@@ -331,19 +308,7 @@ func ApprovePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 		switch keyMsg.String() {
 		case "enter":
 			output := ""
-			if m.ID == "" {
-				m.StatusMessage = "ID can't be blank"
-				m.State = "status"
-				m.ID = ""
-				break
-			} else if _, err := strconv.Atoi(m.ID); err != nil {
-				m.StatusMessage = "ID has to be a valid number"
-				m.State = "status"
-				m.ID = ""
-				break
-			} else {
-				output = utils.RunCommand("gh", "pr", "review", m.ID, "--approve")
-			}
+			output = utils.RunCommand("gh", "pr", "review", m.ID, "--approve")
 			m.StatusMessage = output
 			m.State = "status"
 			m.ID = ""
@@ -352,7 +317,7 @@ func ApprovePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor--
 			}
 		case "down", "tab":
-			if m.Cursor < 9 {
+			if m.Cursor < 1 {
 				m.Cursor++
 			}
 		case "ctrl+c", "q":
@@ -362,7 +327,7 @@ func ApprovePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			if len(m.ID) > 0 {
 				m.ID = m.ID[:len(m.ID)-1]
 			}
-		case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
+		default:
 			switch m.Cursor {
 			case 0:
 				m.ID += keyMsg.String()
@@ -374,9 +339,68 @@ func ApprovePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 
 func ShowApprovePR(m utils.Model) string {
 	createChoices := []string{
-		fmt.Sprintf("PR ID: %s", m.ID),
+		fmt.Sprintf("PR ID, URL or branch (blank for current): %s", m.ID),
 	}
 	topMsg := "Approve a PR"
+	btmMsg := "Press [ctrl+c] to go back to the main menu, [enter] to approve"
+	return utils.ShowMenu(m, topMsg, createChoices, btmMsg)
+}
+
+func ClosePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
+	if keyMsg, ok := msg.(tea.KeyMsg); ok {
+		switch keyMsg.String() {
+		case "enter":
+			switch m.Cursor {
+			case 0:
+				m.Cursor++
+			case 1:
+				m.Cursor++
+			case 2:
+				if m.Comment != "" {
+					output := ""
+					output = utils.RunCommand("gh", "pr", "close", m.ID)
+					m.StatusMessage = output
+					m.State = "status"
+					m.ID = ""
+				} else{
+					m.StatusMessage = "PR ID can't be empty"
+					m.State = "status"
+				}
+				}
+		case "up":
+			if m.Cursor > 0 {
+				m.Cursor--
+			}
+		case "down", "tab":
+			if m.Cursor < 3 {
+				m.Cursor++
+			}
+		case "ctrl+c", "q":
+			m.State = "menu"
+			m.ID = ""
+		case "backspace":
+			if len(m.ID) > 0 {
+				m.ID = m.ID[:len(m.ID)-1]
+			}
+		default:
+			switch m.Cursor {
+			case 0:
+				m.ID += keyMsg.String()
+			case 1:
+				m.Comment += keyMsg.String()
+			}
+		}
+	}
+	return m, nil
+}
+
+func ShowClosePR(m utils.Model) string {
+	createChoices := []string{
+		fmt.Sprintf("PR ID, URL or branch (blank for current): %s", m.ID),
+		fmt.Sprintf("Comment: %s", m.Comment),
+		"[Close PR]",
+	}
+	topMsg := "Close a PR"
 	btmMsg := "Press [ctrl+c] to go back to the main menu, [enter] to approve"
 	return utils.ShowMenu(m, topMsg, createChoices, btmMsg)
 }

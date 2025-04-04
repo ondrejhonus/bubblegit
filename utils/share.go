@@ -30,6 +30,7 @@ type Model struct {
 	Title       string
 	BodyMessage string
 	ID          string
+	Comment		string
 }
 
 // Exported function to create a new model
