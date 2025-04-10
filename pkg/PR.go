@@ -38,14 +38,14 @@ func PullRequestSubmenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			case 1:
 				// List
 				output := utils.RunCommand("gh", "pr", "ls")
-				m.StatusMessage = "All PRs from current branch:"
+				m.StatusMessage = "All PRs from current branch: \n"
 				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
 			case 2:
 				// Status
 				output := utils.RunCommand("gh", "pr", "status")
-				m.StatusMessage = "Current branch PR status:"
+				m.StatusMessage = "Current branch PR status: \n"
 				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
@@ -140,12 +140,15 @@ func CreatePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 					m.Target = "main"
 				}
 				output := ""
-				if m.BodyMessage == "" && m.Title == "" {
-					output = utils.RunCommand("gh", "pr", "create", "-B", m.Target, "-H", m.Source)
-				} else if m.BodyMessage == "" && m.Title != "" {
-					output = utils.RunCommand("gh", "pr", "create", "-B", m.Target, "-H", m.Source, "--title", m.Title)
-				} else if m.Title == "" && m.BodyMessage != "" {
-					output = utils.RunCommand("gh", "pr", "create", "-B", m.Target, "-H", m.Source, "--body", m.BodyMessage)
+				if m.Title == "" || m.BodyMessage == "" {
+					m.StatusMessage = "Title and Body message cannot be empty"
+					m.State = "status"
+					m.Source = ""
+					m.Target = ""
+					m.Title = ""
+					m.BodyMessage = ""
+					m.Title = ""
+					m.Cursor = 0
 				} else {
 					output = utils.RunCommand("gh", "pr", "create", "-B", m.Target, "-H", m.Source, "--title", m.Title, "--body", m.BodyMessage)
 				}
@@ -219,7 +222,7 @@ func ShowCreatePR(m utils.Model) string {
 	createChoices := []string{
 		fmt.Sprintf("Source branch (blank for current): %s", m.Source),
 		fmt.Sprintf("Target branch (blank for main): %s", m.Target),
-		fmt.Sprintf("Title (blank for default): %s", m.Title),
+		fmt.Sprintf("Title: %s", m.Title),
 		fmt.Sprintf("Body message (can be empty): %s", m.BodyMessage),
 		fmt.Sprintf("[PR %s > %s]", m.Source, m.Target),
 	}
@@ -394,9 +397,17 @@ func ClosePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			m.State = "menu"
 			m.ID = ""
 		case "backspace":
-			if len(m.ID) > 0 {
-				m.ID = m.ID[:len(m.ID)-1]
+			switch m.Cursor {
+			case 0:
+				if len(m.ID) > 0 {
+					m.ID = m.ID[:len(m.ID)-1]
+				}
+			case 1:
+				if len(m.Comment) > 0 {
+					m.Comment = m.Comment[:len(m.Comment)-1]
+				}
 			}
+
 		default:
 			switch m.Cursor {
 			case 0:
@@ -457,8 +468,15 @@ func MergePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			m.State = "menu"
 			m.ID = ""
 		case "backspace":
-			if len(m.ID) > 0 {
-				m.ID = m.ID[:len(m.ID)-1]
+			switch m.Cursor {
+			case 0:
+				if len(m.ID) > 0 {
+					m.ID = m.ID[:len(m.ID)-1]
+				}
+			case 1:
+				if len(m.Comment) > 0 {
+					m.Comment = m.Comment[:len(m.Comment)-1]
+				}
 			}
 		default:
 			switch m.Cursor {
@@ -520,8 +538,15 @@ func ReopenPR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			m.State = "menu"
 			m.ID = ""
 		case "backspace":
-			if len(m.ID) > 0 {
-				m.ID = m.ID[:len(m.ID)-1]
+			switch m.Cursor {
+			case 0:
+				if len(m.ID) > 0 {
+					m.ID = m.ID[:len(m.ID)-1]
+				}
+			case 1:
+				if len(m.Comment) > 0 {
+					m.Comment = m.Comment[:len(m.Comment)-1]
+				}
 			}
 		default:
 			switch m.Cursor {
@@ -583,8 +608,15 @@ func DeletePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			m.State = "menu"
 			m.ID = ""
 		case "backspace":
-			if len(m.ID) > 0 {
-				m.ID = m.ID[:len(m.ID)-1]
+			switch m.Cursor {
+			case 0:
+				if len(m.ID) > 0 {
+					m.ID = m.ID[:len(m.ID)-1]
+				}
+			case 1:
+				if len(m.Comment) > 0 {
+					m.Comment = m.Comment[:len(m.Comment)-1]
+				}
 			}
 		default:
 			switch m.Cursor {
