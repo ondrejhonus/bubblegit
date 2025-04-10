@@ -72,6 +72,12 @@ func (m localModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Model, cmd = pkg.ApprovePR(m.Model, msg)
 	case "closePR":
 		m.Model, cmd = pkg.ClosePR(m.Model, msg)
+	case "mergePR":
+		m.Model, cmd = pkg.MergePR(m.Model, msg)
+	case "reopenPR":
+		m.Model, cmd = pkg.ReopenPR(m.Model, msg)
+	case "deletePR":
+		m.Model, cmd = pkg.DeletePR(m.Model, msg)
 	}
 
 	return m, cmd
@@ -125,6 +131,12 @@ func (m localModel) View() string {
 		return pkg.ShowApprovePR(m.Model)
 	case "closePR":
 		return pkg.ShowClosePR(m.Model)
+	case "mergePR":
+		return pkg.ShowMergePR(m.Model)
+	case "reopenPR":
+		return pkg.ShowReopenPR(m.Model)
+	case "deletePR":
+		return pkg.ShowDeletePR(m.Model)
 	}
 
 	return ""

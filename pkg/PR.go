@@ -38,13 +38,15 @@ func PullRequestSubmenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			case 1:
 				// List
 				output := utils.RunCommand("gh", "pr", "ls")
-				m.StatusMessage = output
+				m.StatusMessage = "All PRs from current branch:"
+				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
 			case 2:
 				// Status
 				output := utils.RunCommand("gh", "pr", "status")
-				m.StatusMessage = output
+				m.StatusMessage = "Current branch PR status:"
+				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
 			case 3:
@@ -64,21 +66,30 @@ func PullRequestSubmenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.State = "closePR"
 				m.Cursor = 0
 			case 7:
-				m.Cursor++
+				// Merge
+				m.State = "mergePR"
+				m.Cursor = 0
 			case 8:
-				m.Cursor++
+				// Reopen
+				m.State = "reopenPR"
+				m.Cursor = 0
+			case 9:
+				//Delete
+				m.State = "deletePR"
+				m.Cursor = 0
 			}
 		case "up":
 			if m.Cursor > 0 {
 				m.Cursor--
 			}
 		case "down", "tab":
-			if m.Cursor < 9 {
+			if m.Cursor < 10 {
 				m.Cursor++
 			}
 		case "ctrl+c", "q":
 			m.State = "menu"
 			m.BranchName = ""
+			m.Cursor = 0
 		default:
 			switch m.Cursor {
 			case 0:
@@ -358,15 +369,19 @@ func ClosePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			case 2:
 				if m.Comment != "" {
 					output := ""
+					output = utils.RunCommand("gh", "pr", "close", m.ID, "-c", m.Comment)
+					m.StatusMessage = output
+					m.State = "status"
+					m.ID = ""
+					m.Comment = ""
+				} else {
+					output := ""
 					output = utils.RunCommand("gh", "pr", "close", m.ID)
 					m.StatusMessage = output
 					m.State = "status"
 					m.ID = ""
-				} else{
-					m.StatusMessage = "PR ID can't be empty"
-					m.State = "status"
 				}
-				}
+			}
 		case "up":
 			if m.Cursor > 0 {
 				m.Cursor--
@@ -401,6 +416,195 @@ func ShowClosePR(m utils.Model) string {
 		"[Close PR]",
 	}
 	topMsg := "Close a PR"
-	btmMsg := "Press [ctrl+c] to go back to the main menu, [enter] to approve"
+	btmMsg := "Press [ctrl+c] to go back to the main menu, [enter] to close"
+	return utils.ShowMenu(m, topMsg, createChoices, btmMsg)
+}
+
+func MergePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
+	if keyMsg, ok := msg.(tea.KeyMsg); ok {
+		switch keyMsg.String() {
+		case "enter":
+			switch m.Cursor {
+			case 0:
+				m.Cursor++
+			case 1:
+				m.Cursor++
+			case 2:
+				if m.Comment != "" {
+					output := ""
+					output = utils.RunCommand("gh", "pr", "merge", m.ID, "-c", m.Comment)
+					m.StatusMessage = output
+					m.State = "status"
+					m.ID = ""
+					m.Comment = ""
+				} else {
+					output := ""
+					output = utils.RunCommand("gh", "pr", "merge", m.ID)
+					m.StatusMessage = output
+					m.State = "status"
+					m.ID = ""
+				}
+			}
+		case "up":
+			if m.Cursor > 0 {
+				m.Cursor--
+			}
+		case "down", "tab":
+			if m.Cursor < 3 {
+				m.Cursor++
+			}
+		case "ctrl+c", "q":
+			m.State = "menu"
+			m.ID = ""
+		case "backspace":
+			if len(m.ID) > 0 {
+				m.ID = m.ID[:len(m.ID)-1]
+			}
+		default:
+			switch m.Cursor {
+			case 0:
+				m.ID += keyMsg.String()
+			case 1:
+				m.Comment += keyMsg.String()
+			}
+		}
+	}
+	return m, nil
+}
+
+func ShowMergePR(m utils.Model) string {
+	createChoices := []string{
+		fmt.Sprintf("PR ID, URL or branch (blank for current): %s", m.ID),
+		fmt.Sprintf("Comment: %s", m.Comment),
+		"[Merge PRs]",
+	}
+	topMsg := "Merge PR"
+	btmMsg := "Press [ctrl+c] to go back to the main menu, [enter] to merge"
+	return utils.ShowMenu(m, topMsg, createChoices, btmMsg)
+}
+
+func ReopenPR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
+	if keyMsg, ok := msg.(tea.KeyMsg); ok {
+		switch keyMsg.String() {
+		case "enter":
+			switch m.Cursor {
+			case 0:
+				m.Cursor++
+			case 1:
+				m.Cursor++
+			case 2:
+				if m.Comment != "" {
+					output := ""
+					output = utils.RunCommand("gh", "pr", "reopen", m.ID, "-c", m.Comment)
+					m.StatusMessage = output
+					m.State = "status"
+					m.ID = ""
+					m.Comment = ""
+				} else {
+					output := ""
+					output = utils.RunCommand("gh", "pr", "merge", m.ID)
+					m.StatusMessage = output
+					m.State = "status"
+					m.ID = ""
+				}
+			}
+		case "up":
+			if m.Cursor > 0 {
+				m.Cursor--
+			}
+		case "down", "tab":
+			if m.Cursor < 3 {
+				m.Cursor++
+			}
+		case "ctrl+c", "q":
+			m.State = "menu"
+			m.ID = ""
+		case "backspace":
+			if len(m.ID) > 0 {
+				m.ID = m.ID[:len(m.ID)-1]
+			}
+		default:
+			switch m.Cursor {
+			case 0:
+				m.ID += keyMsg.String()
+			case 1:
+				m.Comment += keyMsg.String()
+			}
+		}
+	}
+	return m, nil
+}
+
+func ShowReopenPR(m utils.Model) string {
+	createChoices := []string{
+		fmt.Sprintf("PR ID, URL or branch (blank for current): %s", m.ID),
+		fmt.Sprintf("Comment: %s", m.Comment),
+		"[Merge PRs]",
+	}
+	topMsg := "Merge PR"
+	btmMsg := "Press [ctrl+c] to go back to the main menu, [enter] to merge"
+	return utils.ShowMenu(m, topMsg, createChoices, btmMsg)
+}
+
+func DeletePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
+	if keyMsg, ok := msg.(tea.KeyMsg); ok {
+		switch keyMsg.String() {
+		case "enter":
+			switch m.Cursor {
+			case 0:
+				m.Cursor++
+			case 1:
+				m.Cursor++
+			case 2:
+				if m.Comment != "" {
+					output := ""
+					output = utils.RunCommand("gh", "pr", "close", m.ID, "--delete-branch", "-c", m.Comment)
+					m.StatusMessage = output
+					m.State = "status"
+					m.ID = ""
+					m.Comment = ""
+				} else {
+					output := ""
+					output = utils.RunCommand("gh", "pr", "close", m.ID, "--delete-branch")
+					m.StatusMessage = output
+					m.State = "status"
+					m.ID = ""
+				}
+			}
+		case "up":
+			if m.Cursor > 0 {
+				m.Cursor--
+			}
+		case "down", "tab":
+			if m.Cursor < 3 {
+				m.Cursor++
+			}
+		case "ctrl+c", "q":
+			m.State = "menu"
+			m.ID = ""
+		case "backspace":
+			if len(m.ID) > 0 {
+				m.ID = m.ID[:len(m.ID)-1]
+			}
+		default:
+			switch m.Cursor {
+			case 0:
+				m.ID += keyMsg.String()
+			case 1:
+				m.Comment += keyMsg.String()
+			}
+		}
+	}
+	return m, nil
+}
+
+func ShowDeletePR(m utils.Model) string {
+	createChoices := []string{
+		fmt.Sprintf("PR ID, URL or branch (blank for current): %s", m.ID),
+		fmt.Sprintf("Comment: %s", m.Comment),
+		"[Delete PRs]",
+	}
+	topMsg := "Close PR and delete branch"
+	btmMsg := "Press [ctrl+c] to go back to the main menu, [enter] to delete"
 	return utils.ShowMenu(m, topMsg, createChoices, btmMsg)
 }
