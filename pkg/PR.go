@@ -443,14 +443,14 @@ func MergePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			case 2:
 				if m.Comment != "" {
 					output := ""
-					output = utils.RunCommand("gh", "pr", "merge", m.ID, "-c", m.Comment)
-					m.StatusMessage = output
+					output = utils.RunCommand("gh", "pr", "merge", "-m", m.ID, "-t", m.Comment)
+					m.StatusMessage = output + "PR merged successfully (i think)"
 					m.State = "status"
 					m.ID = ""
 					m.Comment = ""
 				} else {
 					output := ""
-					output = utils.RunCommand("gh", "pr", "merge", m.ID)
+					output = utils.RunCommand("gh", "pr", "merge", "-m", m.ID)
 					m.StatusMessage = output
 					m.State = "status"
 					m.ID = ""
