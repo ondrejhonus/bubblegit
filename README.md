@@ -27,15 +27,11 @@ To install the app, you need to have Go installed on your machine. Then, you can
 ```sh
 git clone https://github.com/ondrejhonus/bubblegit.git
 cd bubblegit
-go build -o bubblegit
+./build.sh
 ```
 
 ## Usage
 
-Run the app from the terminal:
+Then you can use the ```bubblegit``` command run the app from anywhere in the terminal:
 
-```sh
-./bubblegit
-```
-
-Use the keyboard to navigate and perform Git actions.
+Use the keyboard arrows or 'hjkl' to navigate and perform Git actions.
