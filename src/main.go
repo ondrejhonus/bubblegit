@@ -60,6 +60,24 @@ func (m localModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Model, cmd = pkg.RebaseBranch(m.Model, msg)
 	case "clone":
 		m.Model, cmd = pkg.CloneRepo(m.Model, msg)
+	case "pullRequest":
+		m.Model, cmd = pkg.PullRequestSubmenu(m.Model, msg)
+	case "createPR":
+		m.Model, cmd = pkg.CreatePR(m.Model, msg)
+	case "checkoutPR":
+		m.Model, cmd = pkg.CheckoutPR(m.Model, msg)
+	case "viewPR":
+		m.Model, cmd = pkg.ViewPR(m.Model, msg)
+	case "approvePR":
+		m.Model, cmd = pkg.ApprovePR(m.Model, msg)
+	case "closePR":
+		m.Model, cmd = pkg.ClosePR(m.Model, msg)
+	case "mergePR":
+		m.Model, cmd = pkg.MergePR(m.Model, msg)
+	case "reopenPR":
+		m.Model, cmd = pkg.ReopenPR(m.Model, msg)
+	case "deletePR":
+		m.Model, cmd = pkg.DeletePR(m.Model, msg)
 	}
 
 	return m, cmd
@@ -101,6 +119,24 @@ func (m localModel) View() string {
 		return pkg.ShowRebaseBranch(m.Model)
 	case "clone":
 		return pkg.ShowCloneRepo(m.Model)
+	case "pullRequest":
+		return pkg.ShowPullRequestSubmenu(m.Model)
+	case "createPR":
+		return pkg.ShowCreatePR(m.Model)
+	case "checkoutPR":
+		return pkg.ShowCheckoutPR(m.Model)
+	case "viewPR":
+		return pkg.ShowViewPR(m.Model)
+	case "approvePR":
+		return pkg.ShowApprovePR(m.Model)
+	case "closePR":
+		return pkg.ShowClosePR(m.Model)
+	case "mergePR":
+		return pkg.ShowMergePR(m.Model)
+	case "reopenPR":
+		return pkg.ShowReopenPR(m.Model)
+	case "deletePR":
+		return pkg.ShowDeletePR(m.Model)
 	}
 
 	return ""

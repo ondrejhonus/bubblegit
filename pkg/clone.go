@@ -22,7 +22,6 @@ func CloneRepo(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 					m.Cursor++
 				}
 			case 1:
-				println(m.RepoName)
 				output := utils.RunCommand("git", "clone", m.RepoName)
 				m.StatusMessage = output
 				m.State = "status"
