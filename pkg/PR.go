@@ -83,7 +83,7 @@ func PullRequestSubmenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor--
 			}
 		case "down", "tab":
-			if m.Cursor < 10 {
+			if m.Cursor < 9 {
 				m.Cursor++
 			}
 		case "ctrl+c", "q":
@@ -141,7 +141,7 @@ func CreatePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				}
 				output := ""
 				if m.Title == "" || m.BodyMessage == "" {
-					m.StatusMessage = "Title and Body message cannot be empty"
+					m.StatusMessage = " Both Title and Body message cannot be empty"
 					m.State = "status"
 					m.Source = ""
 					m.Target = ""
@@ -151,8 +151,8 @@ func CreatePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 					m.Cursor = 0
 				} else {
 					output = utils.RunCommand("gh", "pr", "create", "-B", m.Target, "-H", m.Source, "--title", m.Title, "--body", m.BodyMessage)
+					m.StatusMessage = output
 				}
-				m.StatusMessage = output
 				m.State = "status"
 				m.Source = ""
 				m.Target = ""
@@ -170,8 +170,9 @@ func CreatePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor++
 			}
 		case "ctrl+c":
-			m.State = "menu"
+			m.State = "pullRequest"
 			m.BranchName = ""
+			m.Cursor = 0
 		case "backspace":
 			switch m.Cursor {
 			case 0:
@@ -223,7 +224,7 @@ func ShowCreatePR(m utils.Model) string {
 		fmt.Sprintf("Source branch (blank for current): %s", m.Source),
 		fmt.Sprintf("Target branch (blank for main): %s", m.Target),
 		fmt.Sprintf("Title: %s", m.Title),
-		fmt.Sprintf("Body message (can be empty): %s", m.BodyMessage),
+		fmt.Sprintf("Body message*: %s", m.BodyMessage),
 		fmt.Sprintf("[PR %s > %s]", m.Source, m.Target),
 	}
 	topMsg := "Create a pull request"
@@ -249,7 +250,9 @@ func CheckoutPR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor++
 			}
 		case "ctrl+c", "q":
-			m.State = "menu"
+			m.State = "pullRequest"
+			m.BranchName = ""
+			m.Cursor = 0
 			m.ID = ""
 		case "backspace":
 			if len(m.ID) > 0 {
@@ -292,7 +295,9 @@ func ViewPR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor++
 			}
 		case "ctrl+c", "q":
-			m.State = "menu"
+			m.State = "pullRequest"
+			m.BranchName = ""
+			m.Cursor = 0
 			m.ID = ""
 		case "backspace":
 			if len(m.ID) > 0 {
@@ -335,7 +340,9 @@ func ApprovePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor++
 			}
 		case "ctrl+c", "q":
-			m.State = "menu"
+			m.State = "pullRequest"
+			m.BranchName = ""
+			m.Cursor = 0
 			m.ID = ""
 		case "backspace":
 			if len(m.ID) > 0 {
@@ -394,7 +401,9 @@ func ClosePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor++
 			}
 		case "ctrl+c", "q":
-			m.State = "menu"
+			m.State = "pullRequest"
+			m.BranchName = ""
+			m.Cursor = 0
 			m.ID = ""
 		case "backspace":
 			switch m.Cursor {
@@ -465,7 +474,9 @@ func MergePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor++
 			}
 		case "ctrl+c", "q":
-			m.State = "menu"
+			m.State = "pullRequest"
+			m.BranchName = ""
+			m.Cursor = 0
 			m.ID = ""
 		case "backspace":
 			switch m.Cursor {
@@ -535,7 +546,9 @@ func ReopenPR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor++
 			}
 		case "ctrl+c", "q":
-			m.State = "menu"
+			m.State = "pullRequest"
+			m.BranchName = ""
+			m.Cursor = 0
 			m.ID = ""
 		case "backspace":
 			switch m.Cursor {
@@ -605,7 +618,9 @@ func DeletePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor++
 			}
 		case "ctrl+c", "q":
-			m.State = "menu"
+			m.State = "pullRequest"
+			m.BranchName = ""
+			m.Cursor = 0
 			m.ID = ""
 		case "backspace":
 			switch m.Cursor {

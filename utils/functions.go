@@ -1,8 +1,10 @@
 package utils
 
 import (
+	"bytes"
 	"fmt"
 	"os/exec"
+	"strings"
 )
 
 // /////// RUN GIT COMMAND //////////
@@ -27,4 +29,15 @@ func ShowMenu(m Model, title string, choices []string, top string) string {
 	}
 	s += "\n" + top + "\n"
 	return s
+}
+
+func GetGitHubUsername() (string, error) {
+	cmd := exec.Command("gh", "api", "user", "--jq", ".login")
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	err := cmd.Run()
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(out.String()), nil
 }

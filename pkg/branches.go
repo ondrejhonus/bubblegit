@@ -117,8 +117,9 @@ func CheckoutBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor++
 			}
 		case "ctrl+c":
-			m.State = "menu"
+			m.State = "branches"
 			m.BranchName = ""
+			m.Cursor = 0
 		case "backspace":
 			if m.Cursor == 0 && len(m.BranchName) > 0 {
 				m.BranchName = m.BranchName[:len(m.BranchName)-1]
@@ -173,8 +174,9 @@ func SetUpstream(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.BranchName = ""
 			}
 		case "ctrl+c":
-			m.State = "menu"
+			m.State = "branches"
 			m.BranchName = ""
+			m.Cursor = 0
 		case "backspace":
 			if len(m.BranchName) > 0 {
 				m.BranchName = m.BranchName[:len(m.BranchName)-1]
@@ -223,8 +225,9 @@ func DeleteBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				}
 			}
 		case "ctrl+c":
-			m.State = "menu"
+			m.State = "branches"
 			m.BranchName = ""
+			m.Cursor = 0
 		case "backspace":
 			if len(m.BranchName) > 0 {
 				m.BranchName = m.BranchName[:len(m.BranchName)-1]
@@ -292,8 +295,9 @@ func RenameBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor++
 			}
 		case "ctrl+c":
-			m.State = "menu"
+			m.State = "branches"
 			m.BranchName = ""
+			m.Cursor = 0
 		case "backspace":
 			if len(m.BranchName) > 0 {
 				m.BranchName = m.BranchName[:len(m.BranchName)-1]
@@ -365,8 +369,9 @@ func MergeBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor++
 			}
 		case "ctrl+c":
-			m.State = "menu"
+			m.State = "branches"
 			m.BranchName = ""
+			m.Cursor = 0
 		case "backspace":
 			if len(m.BranchName) > 0 {
 				m.BranchName = m.BranchName[:len(m.BranchName)-1]
@@ -437,8 +442,9 @@ func RebaseBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor++
 			}
 		case "ctrl+c":
-			m.State = "menu"
+			m.State = "branches"
 			m.BranchName = ""
+			m.Cursor = 0
 		case "backspace":
 			if len(m.BranchName) > 0 {
 				m.BranchName = m.BranchName[:len(m.BranchName)-1]
