@@ -40,6 +40,8 @@ func (m localModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	case "createRepo":
 		m.Model, cmd = pkg.RepoCreate(m.Model, msg)
+	case "allInclusive":
+		m.Model, cmd = pkg.AllInclusive(m.Model, msg)
 	case "fromLocal":
 		m.Model, cmd = pkg.FromLocal(m.Model, msg)
 	case "createEmpty":
@@ -99,6 +101,8 @@ func (m localModel) View() string {
 		return fmt.Sprintf("%s\n\nPress [enter]/[q] to close.", m.StatusMessage)
 	case "createRepo":
 		return pkg.ShowCreateRepoMenu(m.Model)
+	case "allInclusive":
+		return pkg.ShowAllInclusive(m.Model)
 	case "fromLocal":
 		return pkg.ShowCreateFromLocal(m.Model)
 	case "createEmpty":
