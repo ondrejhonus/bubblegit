@@ -20,15 +20,15 @@ func ListMenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.State = "status"
 				m.Cursor = 0
 
+			// case 1:
+			// 	// Commit list
+			// 	// Prolly use "git log"
+			// 	output := utils.RunCommand("git", "log", "--graph", "--pretty=format:%h %ad | %s%d [%an]", "--date=short")
+			// 	m.StatusMessage = "All commits in full detail:\n"
+			// 	m.StatusMessage = output
+			// 	m.State = "CommitList"
+			// 	m.Cursor = 0
 			case 1:
-				// Commit list
-				// Prolly use "git log"
-				output := utils.RunCommand("git", "log")
-				m.StatusMessage = "All commits in full detail:\n"
-				m.StatusMessage = output
-				m.State = "CommitList"
-				m.Cursor = 0
-			case 2:
 				// List Branches
 				// Prolly use "git branch -a"
 				output := utils.RunCommand("git", "branch", "-a")
@@ -36,42 +36,42 @@ func ListMenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
-			case 3:
+			case 2:
 				// List Stashes
 				output := utils.RunCommand("git", "stash", "list")
 				m.StatusMessage = "All stashes:\n"
 				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
-			case 4:
+			case 3:
 				// List Tags
 				output := utils.RunCommand("git", "tag")
 				m.StatusMessage = "All tags:\n"
 				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
-			case 5:
+			case 4:
 				// List Remotes
 				output := utils.RunCommand("git", "remote", "-v")
 				m.StatusMessage = "All remotes:\n"
 				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
-			case 6:
+			case 5:
 				// List Configs
 				output := utils.RunCommand("git", "config", "--list")
 				m.StatusMessage = "All configurations:\n"
 				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
-			case 7:
+			case 6:
 				// List Tracked Files
 				output := utils.RunCommand("git", "ls-files")
 				m.StatusMessage = "All tracked files:\n"
 				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
-			case 8:
+			case 7:
 				// List Untracked Files
 				output := utils.RunCommand("git", "ls-files", "--others", "--exclude-standard")
 				m.StatusMessage = "All untracked files:\n"
@@ -84,7 +84,7 @@ func ListMenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.Cursor--
 			}
 		case "down", "tab":
-			if m.Cursor < 9 {
+			if m.Cursor < 8 {
 				m.Cursor++
 			}
 		case "ctrl+c", "q":
