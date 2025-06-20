@@ -19,7 +19,6 @@ func ListMenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
-
 			// case 1:
 			// 	// Commit list
 			// 	// Prolly use "git log"
@@ -132,16 +131,15 @@ func ListMenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 
 func ShowListMenu(m utils.Model) string {
 	prChoices := []string{
-		"1. Short Commit List",
-		"2. Commit List",
-		"3. List Branches",
-		"4. List Stashes",
-		"5. List Tags",
-		"6. List Remotes",
-		"7. List Configs",
-		"8. List Tracked Files",
-		"9. List Untracked Files",
+		"1. Commits",
+		"2. Branches",
+		"3. Stashes",
+		"4. Tags",
+		"5. Remotes",
+		"6. Configs",
+		"7. Tracked Files",
+		"8. Untracked Files",
 	}
 	btmMsg := "Press [q] or [ctrl+c] to go back to the main menu"
-	return utils.ShowMenu(m, "Pull request", prChoices, btmMsg)
+	return utils.ShowMenu(m, "Show list of", prChoices, btmMsg)
 }
