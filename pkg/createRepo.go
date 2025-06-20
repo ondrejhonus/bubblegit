@@ -45,9 +45,9 @@ func RepoCreate(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 func ShowCreateRepoMenu(m utils.Model) string {
 	s := "What would you want to do?\n\n"
 	createChoices := []string{
-		"From local + commit",
-		"Create repo from ./",
-		"Create empty remote",
+		"1 | From local + commit",
+		"2 | Create repo from ./",
+		"3 | Create empty remote",
 	}
 	for i, choice := range createChoices {
 		cursor := " "
@@ -130,6 +130,13 @@ func FromLocal(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			case 2:
 				if len(m.Source) > 0 {
 					m.Source = m.Source[:len(m.Source)-1]
+				}
+			}
+		case "1", "2", "3", "4", "5", "6", "7", "8", "9", "0":
+			if len(keyMsg.String()) == 1 {
+				num := int(keyMsg.String()[0] - '1')
+				if num >= 0 && num < 8 {
+					m.Cursor = num
 				}
 			}
 		default:

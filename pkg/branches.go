@@ -48,6 +48,14 @@ func BranchControl(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			}
 		case "ctrl+c", "q":
 			m.State = "menu"
+
+		case "1", "2", "3", "4", "5", "6", "7", "8", "9", "0":
+			if len(keyMsg.String()) == 1 {
+				num := int(keyMsg.String()[0] - '1')
+				if num >= 0 && num < 8 {
+					m.Cursor = num
+				}
+			}
 		}
 	}
 	return m, nil
@@ -57,12 +65,12 @@ func BranchControl(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 func ShowBranchesMenu(m utils.Model) string {
 	s := "Branches\n\n"
 	branchChoices := []string{
-		"Checkout branch",
-		"Set upstream",
-		"Delete branch",
-		"Rename branch",
-		"Merge branch",
-		"Rebase branch",
+		"1 | Checkout branch",
+		"2 | Set upstream",
+		"3 | Delete branch",
+		"4 | Rename branch",
+		"5 | Merge branch",
+		"6 | Rebase branch",
 	}
 
 	for i, choice := range branchChoices {
