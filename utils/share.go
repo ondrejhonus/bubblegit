@@ -30,13 +30,13 @@ type Model struct {
 	Title       string
 	BodyMessage string
 	ID          string
-	Comment		string
+	Comment     string
 }
 
 // Exported function to create a new model
 func InitialModel() Model {
 	return Model{
-		Choices:     []string{"Add", "Commit", "Push", "Clone", "Branch", "Pull request", "Init", "Create repo"},
+		Choices:     []string{"Add", "Commit", "Push", "Clone", "Show", "Branch", "Pull request", "Init", "Create repo"},
 		Selected:    make(map[int]struct{}),
 		State:       "menu", // default state
 		IsPublic:    true,
