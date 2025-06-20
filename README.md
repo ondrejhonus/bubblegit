@@ -13,10 +13,11 @@ This is a simple TUI (Text User Interface) application written in Go using the [
 - **Merge Branches**: Merge changes from one branch to another.
 - **Rebase Branches**: Rebase your current branch onto another branch.
 - **Stash Changes**: Stash your uncommitted changes.
+- **Pull Requests**: Create and manage pull requests.
 
 ## TO-DO
-- **Pull Requests**: Create and manage pull requests.
 - **View Logs**: View commit logs and history.
+- **Add list branches to menu > Branch**
 - **Apply Stash**: Apply stashed changes back to your working directory.
 - **Resolve Conflicts**: Resolve merge conflicts.
 

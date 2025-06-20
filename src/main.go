@@ -80,6 +80,9 @@ func (m localModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Model, cmd = pkg.ReopenPR(m.Model, msg)
 	case "deletePR":
 		m.Model, cmd = pkg.DeletePR(m.Model, msg)
+	case "list":
+		m.Model, cmd = pkg.ListMenu(m.Model, msg)
+
 	}
 
 	return m, cmd
@@ -141,6 +144,8 @@ func (m localModel) View() string {
 		return pkg.ShowReopenPR(m.Model)
 	case "deletePR":
 		return pkg.ShowDeletePR(m.Model)
+	case "list":
+		return pkg.ShowListMenu(m.Model)
 	}
 
 	return ""
