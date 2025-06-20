@@ -90,33 +90,13 @@ func ListMenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			m.State = "menu"
 			m.BranchName = ""
 			m.Cursor = 0
-		case "1":
-			m.Cursor = 0
-			return ListMenu(m, tea.KeyMsg{Type: tea.KeyEnter})
-		case "2":
-			m.Cursor = 1
-			return ListMenu(m, tea.KeyMsg{Type: tea.KeyEnter})
-		case "3":
-			m.Cursor = 2
-			return ListMenu(m, tea.KeyMsg{Type: tea.KeyEnter})
-		case "4":
-			m.Cursor = 3
-			return ListMenu(m, tea.KeyMsg{Type: tea.KeyEnter})
-		case "5":
-			m.Cursor = 4
-			return ListMenu(m, tea.KeyMsg{Type: tea.KeyEnter})
-		case "6":
-			m.Cursor = 5
-			return ListMenu(m, tea.KeyMsg{Type: tea.KeyEnter})
-		case "7":
-			m.Cursor = 6
-			return ListMenu(m, tea.KeyMsg{Type: tea.KeyEnter})
-		case "8":
-			m.Cursor = 7
-			return ListMenu(m, tea.KeyMsg{Type: tea.KeyEnter})
-		case "9":
-			m.Cursor = 8
-			return ListMenu(m, tea.KeyMsg{Type: tea.KeyEnter})
+		case "1", "2", "3", "4", "5", "6", "7", "8", "9", "0":
+			if len(keyMsg.String()) == 1 {
+				num := int(keyMsg.String()[0] - '1')
+				if num >= 0 && num < 8 {
+					m.Cursor = num
+				}
+			}
 		default:
 			switch m.Cursor {
 			case 0:
@@ -131,14 +111,14 @@ func ListMenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 
 func ShowListMenu(m utils.Model) string {
 	prChoices := []string{
-		"1. Commits",
-		"2. Branches",
-		"3. Stashes",
-		"4. Tags",
-		"5. Remotes",
-		"6. Configs",
-		"7. Tracked Files",
-		"8. Untracked Files",
+		"1 | Commits",
+		"2 | Branches",
+		"3 | Stashes",
+		"4 | Tags",
+		"5 | Remotes",
+		"6 | Configs",
+		"7 | Tracked Files",
+		"8 | Untracked Files",
 	}
 	btmMsg := "Press [q] or [ctrl+c] to go back to the main menu"
 	return utils.ShowMenu(m, "Show list of", prChoices, btmMsg)

@@ -90,6 +90,13 @@ func PullRequestSubmenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			m.State = "menu"
 			m.BranchName = ""
 			m.Cursor = 0
+		case "1", "2", "3", "4", "5", "6", "7", "8", "9", "0":
+			if len(keyMsg.String()) == 1 {
+				num := int(keyMsg.String()[0] - '1')
+				if num >= 0 && num < 8 {
+					m.Cursor = num
+				}
+			}
 		default:
 			switch m.Cursor {
 			case 0:
@@ -104,16 +111,16 @@ func PullRequestSubmenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 
 func ShowPullRequestSubmenu(m utils.Model) string {
 	prChoices := []string{
-		"1. Create a pull request",
-		"2. List pull requests",
-		"3. Check pull request status",
-		"4. Checkout a pull request",
-		"5. View a pull request",
-		"6. Approve a pull request",
-		"7. Close a pull request",
-		"8. Merge a pull request",
-		"9. Reopen a pull request",
-		"10. Delete a pull request",
+		"1 | Create a pull request",
+		"2 | List pull requests",
+		"3 | Check pull request status",
+		"4 | Checkout a pull request",
+		"5 | View a pull request",
+		"6 | Approve a pull request",
+		"7 | Close a pull request",
+		"8 | Merge a pull request",
+		"9 | Reopen a pull request",
+		"0 | Delete a pull request",
 	}
 	btmMsg := "Press [q] or [ctrl+c] to go back to the main menu"
 	return utils.ShowMenu(m, "Pull request", prChoices, btmMsg)

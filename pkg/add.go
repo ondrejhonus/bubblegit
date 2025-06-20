@@ -53,6 +53,13 @@ func AddFile(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			if len(m.CommitMessage) > 0 {
 				m.CommitMessage = m.CommitMessage[:len(m.CommitMessage)-1]
 			}
+		case "1", "2", "3", "4", "5", "6", "7", "8", "9", "0":
+			if len(keyMsg.String()) == 1 {
+				num := int(keyMsg.String()[0] - '1')
+				if num >= 0 && num < 8 {
+					m.Cursor = num
+				}
+			}
 		default:
 			m.CommitMessage += keyMsg.String()
 		}
@@ -63,7 +70,7 @@ func AddFile(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 // Print the add menu on the screen
 func ShowAddMenu(m utils.Model) string {
 	s := "What would you like to add?\n\n"
-	addChoices := []string{"All files", "Specific file"}
+	addChoices := []string{"1 | All files", "2 | Specific file"}
 
 	for i, choice := range addChoices {
 		cursor := " "
