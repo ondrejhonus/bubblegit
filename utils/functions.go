@@ -27,7 +27,7 @@ func ShowMenu(m Model, title string, choices []string, top string) string {
 		}
 		s += fmt.Sprintf("%s %s\n", cursor, choice)
 	}
-	s += "\n" + top + "\n"
+	s += "\n" + top
 	return s
 }
 

@@ -64,6 +64,13 @@ func MenuFunctions(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.State = "createRepo"
 				m.Cursor = 0
 			}
+		case "1", "2", "3", "4", "5", "6", "7", "8", "9":
+			if len(keyMsg.String()) == 1 {
+				num := int(keyMsg.String()[0] - '1')
+				if num >= 0 && num < 9 {
+					m.Cursor = num
+				}
+			}
 		}
 	}
 	return m, nil
