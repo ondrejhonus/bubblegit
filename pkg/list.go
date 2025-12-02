@@ -90,7 +90,7 @@ func ListMenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			m.State = "menu"
 			m.BranchName = ""
 			m.Cursor = 0
-		case "1", "2", "3", "4", "5", "6", "7", "8", "9", "0":
+		case "1", "2", "3", "4", "5", "6", "7", "8":
 			if len(keyMsg.String()) == 1 {
 				num := int(keyMsg.String()[0] - '1')
 				if num >= 0 && num < 8 {

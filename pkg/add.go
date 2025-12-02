@@ -40,10 +40,10 @@ func Add(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 		case "ctrl+c", "q":
 			m.State = "menu"
 			m.Cursor = 0
-		case "1", "2", "3", "4", "5", "6", "7", "8", "9", "0":
+		case "1", "2", "3", "4":
 			if len(keyMsg.String()) == 1 {
 				num := int(keyMsg.String()[0] - '1')
-				if num >= 0 && num < 8 {
+				if num >= 0 && num < 4 {
 					m.Cursor = num
 				}
 			}
