@@ -32,6 +32,9 @@ func (m localModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Model, cmd = pkg.Add(m.Model, msg)
 	case "addFile":
 		m.Model, cmd = pkg.AddFile(m.Model, msg)
+	case "unaddFile":
+		m.Model, cmd = pkg.UnaddFile(m.Model, msg)
+
 	case "status":
 		if keyMsg, ok := msg.(tea.KeyMsg); ok {
 			if keyMsg.String() == "enter" || keyMsg.String() == "q" {
@@ -99,7 +102,9 @@ func (m localModel) View() string {
 	case "add":
 		return pkg.ShowAddMenu(m.Model)
 	case "addFile":
-		return fmt.Sprintf("Enter file name to add: %s\n\nPress [enter] to add or [ctrl+c] to cancel.\n", m.CommitMessage)
+		return fmt.Sprintf("Enter file name to add: %s\n\nPress [enter] to add or [ctrl+c] to cancel.\n", m.FileName)
+	case "unaddFile":
+		return fmt.Sprintf("Enter file name to unstage: %s\n\nPress [enter] to add or [ctrl+c] to cancel.\n", m.FileName)
 	case "status":
 		return fmt.Sprintf("%s\n\nPress [enter]/[q] to close.", m.StatusMessage)
 	case "createRepo":

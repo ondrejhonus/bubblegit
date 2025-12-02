@@ -23,17 +23,29 @@ func Add(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.State = "menu"
 			case 1:
 				m.State = "addFile"
+			case 2:
+				m.State = "unaddFile"
+			case 3:
+				m.State = "resetAdd"
 			}
 		case "up", "k":
 			if m.Cursor > 0 {
 				m.Cursor--
 			}
 		case "down", "j":
-			if m.Cursor < 1 {
+			if m.Cursor < 3 {
 				m.Cursor++
 			}
 		case "ctrl+c", "q":
 			m.State = "menu"
+			m.Cursor = 0
+		case "1", "2", "3", "4", "5", "6", "7", "8", "9", "0":
+			if len(keyMsg.String()) == 1 {
+				num := int(keyMsg.String()[0] - '1')
+				if num >= 0 && num < 8 {
+					m.Cursor = num
+				}
+			}
 		}
 	}
 	return m, nil
@@ -44,24 +56,18 @@ func AddFile(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		switch keyMsg.String() {
 		case "enter":
-			utils.RunCommand("git", "add", m.CommitMessage)
-			m.CommitMessage = ""
+			utils.RunCommand("git", "add", m.FileName)
+			m.FileName = ""
 		case "ctrl+c":
-			m.State = "menu"
-			m.CommitMessage = ""
+			m.State = "add"
+			m.FileName = ""
+			m.Cursor = 0
 		case "backspace":
-			if len(m.CommitMessage) > 0 {
-				m.CommitMessage = m.CommitMessage[:len(m.CommitMessage)-1]
-			}
-		case "1", "2", "3", "4", "5", "6", "7", "8", "9", "0":
-			if len(keyMsg.String()) == 1 {
-				num := int(keyMsg.String()[0] - '1')
-				if num >= 0 && num < 8 {
-					m.Cursor = num
-				}
+			if len(m.FileName) > 0 {
+				m.FileName = m.FileName[:len(m.FileName)-1]
 			}
 		default:
-			m.CommitMessage += keyMsg.String()
+			m.FileName += keyMsg.String()
 		}
 	}
 	return m, nil
@@ -70,7 +76,7 @@ func AddFile(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 // Print the add menu on the screen
 func ShowAddMenu(m utils.Model) string {
 	s := "What would you like to add?\n\n"
-	addChoices := []string{"1 | All files", "2 | Specific file"}
+	addChoices := []string{"1 | All files", "2 | Add file", "3 | Un-add file", "4 | Reset added"}
 
 	for i, choice := range addChoices {
 		cursor := " "
@@ -82,4 +88,26 @@ func ShowAddMenu(m utils.Model) string {
 
 	s += "\nPress [ctrl+c] or [q] to go back.\n"
 	return s
+}
+
+// Get keypresses and update the file name to unstage
+func UnaddFile(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
+	if keyMsg, ok := msg.(tea.KeyMsg); ok {
+		switch keyMsg.String() {
+		case "enter":
+			utils.RunCommand("git", "reset", m.FileName)
+			m.FileName = ""
+		case "ctrl+c":
+			m.State = "add"
+			m.FileName = ""
+			m.Cursor = 0
+		case "backspace":
+			if len(m.FileName) > 0 {
+				m.FileName = m.FileName[:len(m.FileName)-1]
+			}
+		default:
+			m.FileName += keyMsg.String()
+		}
+	}
+	return m, nil
 }

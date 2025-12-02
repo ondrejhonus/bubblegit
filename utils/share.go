@@ -15,6 +15,8 @@ type Model struct {
 	IsTypingMsg   bool
 	CommitMessage string
 	CommitDesc    string
+	// Add
+	FileName string
 	// Repo create
 	RepoName    string
 	RepoDesc    string
