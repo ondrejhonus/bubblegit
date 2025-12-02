@@ -56,20 +56,11 @@ func CloneRepo(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 
 // Print the add menu on the screen
 func ShowCloneRepo(m utils.Model) string {
-	s := "Enter git repo link\n\n"
-	branchChoices := []string{
+	s := "Enter git repo link"
+	choices := []string{
 		fmt.Sprintf("Git clone URL: %s", m.RepoName),
 		"[Clone repo]",
 	}
-
-	for i, choice := range branchChoices {
-		cursor := " "
-		if m.Cursor == i {
-			cursor = ">"
-		}
-		s += fmt.Sprintf("%s %s\n", cursor, choice)
-	}
-
-	s += "\nPress [ctrl+c] to go back, press [enter] to confirm or toggle true/false.\n"
-	return s
+	btmMsg := "\nPress [ctrl+c] to go back, press [enter] to confirm or toggle true/false.\n"
+	return utils.ShowMenu(m, s, choices, btmMsg)
 }

@@ -2,7 +2,6 @@ package pkg
 
 import (
 	"bubblegit/utils"
-	"fmt"
 
 	// Replace with the actual module path to your main package
 	tea "github.com/charmbracelet/bubbletea"
@@ -26,7 +25,9 @@ func Add(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			case 2:
 				m.State = "unaddFile"
 			case 3:
-				m.State = "resetAdd"
+				utils.RunCommand("git", "add", ".")
+				m.State = "menu"
+				m.Cursor = 0
 			}
 		case "up", "k":
 			if m.Cursor > 0 {
@@ -75,19 +76,10 @@ func AddFile(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 
 // Print the add menu on the screen
 func ShowAddMenu(m utils.Model) string {
-	s := "What would you like to add?\n\n"
-	addChoices := []string{"1 | All files", "2 | Add file", "3 | Un-add file", "4 | Reset added"}
-
-	for i, choice := range addChoices {
-		cursor := " "
-		if m.Cursor == i {
-			cursor = ">"
-		}
-		s += fmt.Sprintf("%s %s\n", cursor, choice)
-	}
-
-	s += "\nPress [ctrl+c] or [q] to go back.\n"
-	return s
+	s := "What would you like to add?"
+	choices := []string{"1 | All files", "2 | Add file", "3 | Un-add file", "4 | Reset added"}
+	btmMsg := "Press [q] or [ctrl+c] to go back to the main menu"
+	return utils.ShowMenu(m, s, choices, btmMsg)
 }
 
 // Get keypresses and update the file name to unstage

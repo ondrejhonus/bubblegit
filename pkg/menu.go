@@ -2,7 +2,6 @@ package pkg
 
 import (
 	"bubblegit/utils"
-	"fmt"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -72,16 +71,7 @@ func MenuFunctions(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 
 // Print the menu on the screen
 func ShowMenu(m utils.Model) string {
-	s := "What would you like to do?\n\n"
-
-	for i, choice := range m.Choices {
-		cursor := " "
-		if m.Cursor == i {
-			cursor = ">"
-		}
-		s += fmt.Sprintf("%s %s\n", cursor, choice)
-	}
-
-	s += "\nPress [ctrl+c] or [q] to go back.\n"
-	return s
+	s := "What would you like to do?"
+	btmMsg := "\nPress [ctrl+c] or [q] to go back.\n"
+	return utils.ShowMenu(m, s, m.Choices, btmMsg)
 }

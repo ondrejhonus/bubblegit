@@ -63,8 +63,8 @@ func BranchControl(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 
 // Print the branches menu on the screen
 func ShowBranchesMenu(m utils.Model) string {
-	s := "Branches\n\n"
-	branchChoices := []string{
+	s := "Branches"
+	choices := []string{
 		"1 | Checkout branch",
 		"2 | Set upstream",
 		"3 | Delete branch",
@@ -72,17 +72,8 @@ func ShowBranchesMenu(m utils.Model) string {
 		"5 | Merge branch",
 		"6 | Rebase branch",
 	}
-
-	for i, choice := range branchChoices {
-		cursor := " "
-		if m.Cursor == i {
-			cursor = ">"
-		}
-		s += fmt.Sprintf("%s %s\n", cursor, choice)
-	}
-
-	s += "\nPress [ctrl+c] or [q] to go back.\n"
-	return s
+	btmMsg := "Press [q] or [ctrl+c] to go back to the main menu"
+	return utils.ShowMenu(m, s, choices, btmMsg)
 }
 
 // Get keypresses and update the strings
@@ -143,23 +134,14 @@ func CheckoutBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 
 // Print the add menu on the screen
 func ShowCheckoutBranch(m utils.Model) string {
-	s := "Configure branch checkout\n\n"
-	branchChoices := []string{
+	s := "Configure branch checkout"
+	choices := []string{
 		fmt.Sprintf("Branch name: %s", m.BranchName),
 		fmt.Sprintf("Create branch: %t", m.CreateBranch),
 		"[Checkout/Stash branch]",
 	}
-
-	for i, choice := range branchChoices {
-		cursor := " "
-		if m.Cursor == i {
-			cursor = ">"
-		}
-		s += fmt.Sprintf("%s %s\n", cursor, choice)
-	}
-
-	s += "\nPress [ctrl+c] to go back, press [enter] to confirm or toggle true/false.\n"
-	return s
+	btmMsg := "\nPress [ctrl+c] to go back, press [enter] to confirm.\n"
+	return utils.ShowMenu(m, s, choices, btmMsg)
 }
 
 func SetUpstream(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
@@ -197,20 +179,12 @@ func SetUpstream(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 }
 
 func ShowSetUpstream(m utils.Model) string {
-	s := "Set upstream\n\n"
-	branchChoices := []string{
+	s := "Set upstream"
+	choices := []string{
 		fmt.Sprintf("Branch name (blank for current): %s", m.BranchName),
 	}
-	for i, choice := range branchChoices {
-		cursor := " "
-		if m.Cursor == i {
-			cursor = ">"
-		}
-		s += fmt.Sprintf("%s %s\n", cursor, choice)
-	}
-
-	s += "\nPress [ctrl+c] to go back, press [enter] to confirm.\n"
-	return s
+	btmMsg := "\nPress [ctrl+c] to go back, press [enter] to confirm.\n"
+	return utils.ShowMenu(m, s, choices, btmMsg)
 }
 
 func DeleteBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
@@ -251,21 +225,13 @@ func DeleteBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 }
 
 func ShowDeleteBranch(m utils.Model) string {
-	s := "Delete branch\n\n"
-	branchChoices := []string{
+	s := "Delete branch"
+	choices := []string{
 		fmt.Sprintf("Branch name: %s", m.BranchName),
 		"[Delete branch]",
 	}
-	for i, choice := range branchChoices {
-		cursor := " "
-		if m.Cursor == i {
-			cursor = ">"
-		}
-		s += fmt.Sprintf("%s %s\n", cursor, choice)
-	}
-
-	s += "\nPress [ctrl+c] to go back, press [enter] to confirm.\n"
-	return s
+	btmMsg := "\nPress [ctrl+c] to go back, press [enter] to confirm.\n"
+	return utils.ShowMenu(m, s, choices, btmMsg)
 }
 
 func RenameBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
@@ -323,22 +289,14 @@ func RenameBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 }
 
 func ShowRenameBranch(m utils.Model) string {
-	s := "Rename branch\n\n"
-	branchChoices := []string{
+	s := "Rename branch"
+	choices := []string{
 		fmt.Sprintf("Branch name (blank for current): %s", m.OldBranchName),
 		fmt.Sprintf("New branch name: %s", m.BranchName),
 		"[Rename branch]",
 	}
-	for i, choice := range branchChoices {
-		cursor := " "
-		if m.Cursor == i {
-			cursor = ">"
-		}
-		s += fmt.Sprintf("%s %s\n", cursor, choice)
-	}
-
-	s += "\nPress [ctrl+c] to go back, press [enter] to confirm.\n"
-	return s
+	btmMsg := "\nPress [ctrl+c] to go back, press [enter] to confirm.\n"
+	return utils.ShowMenu(m, s, choices, btmMsg)
 }
 
 func MergeBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
@@ -397,22 +355,14 @@ func MergeBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 }
 
 func ShowMergeBranch(m utils.Model) string {
-	s := "Merge branch\n\n"
-	branchChoices := []string{
+	s := "Merge branch"
+	choices := []string{
 		fmt.Sprintf("Source branch (blank for current): %s", m.OldBranchName),
 		fmt.Sprintf("Target branch: %s", m.BranchName),
 		"[Merge branches]",
 	}
-	for i, choice := range branchChoices {
-		cursor := " "
-		if m.Cursor == i {
-			cursor = ">"
-		}
-		s += fmt.Sprintf("%s %s\n", cursor, choice)
-	}
-
-	s += "\nPress [ctrl+c] to go back, press [enter] to confirm.\n"
-	return s
+	btmMsg := "\nPress [ctrl+c] to go back, press [enter] to confirm.\n"
+	return utils.ShowMenu(m, s, choices, btmMsg)
 }
 
 func RebaseBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
@@ -470,20 +420,12 @@ func RebaseBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 }
 
 func ShowRebaseBranch(m utils.Model) string {
-	s := "Rebase branch\n\n"
-	branchChoices := []string{
+	s := "Rebase branch"
+	choices := []string{
 		fmt.Sprintf("Source branch (blank for current): %s", m.OldBranchName),
 		fmt.Sprintf("Target branch: %s", m.BranchName),
 		"[Rebase branches]",
 	}
-	for i, choice := range branchChoices {
-		cursor := " "
-		if m.Cursor == i {
-			cursor = ">"
-		}
-		s += fmt.Sprintf("%s %s\n", cursor, choice)
-	}
-
-	s += "\nPress [ctrl+c] to go back, press [enter] to confirm.\n"
-	return s
+	btmMsg := "\nPress [ctrl+c] to go back, press [enter] to confirm.\n"
+	return utils.ShowMenu(m, s, choices, btmMsg)
 }

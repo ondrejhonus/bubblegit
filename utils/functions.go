@@ -19,7 +19,7 @@ func RunCommand(name string, args ...string) string {
 }
 
 func ShowMenu(m Model, title string, choices []string, top string) string {
-	s := title + "\n\n"
+	s := title + "\n"
 	for i, choice := range choices {
 		cursor := " "
 		if m.Cursor == i {

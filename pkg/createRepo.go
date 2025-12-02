@@ -43,22 +43,14 @@ func RepoCreate(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 }
 
 func ShowCreateRepoMenu(m utils.Model) string {
-	s := "What would you want to do?\n\n"
-	createChoices := []string{
+	s := "What would you want to do?"
+	choices := []string{
 		"1 | From local + commit",
 		"2 | Create repo from ./",
 		"3 | Create empty remote",
 	}
-	for i, choice := range createChoices {
-		cursor := " "
-		if m.Cursor == i {
-			cursor = ">"
-		}
-		s += fmt.Sprintf("%s %s\n", cursor, choice)
-	}
-
-	s += "\nPress [ctrl+c] or [q] to go back, [enter] to confirm.\n"
-	return s
+	btmMsg := "\nPress [ctrl+c] or [q] to go back, [enter] to confirm.\n"
+	return utils.ShowMenu(m, s, choices, btmMsg)
 }
 
 // Get keypresses and update the file name to add
@@ -333,67 +325,40 @@ func CreateEmpty(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 }
 
 func ShowCreateFromLocal(m utils.Model) string {
-	s := "Enter the following details:\n\n"
-	createChoices := []string{
+	s := "Enter the following details:"
+	choices := []string{
 		fmt.Sprintf("Name: %s", m.RepoName),
 		fmt.Sprintf("Description: %s", m.RepoDesc),
 		fmt.Sprintf("Source (default = ./): %s", m.Source),
 		fmt.Sprintf("Public: %t", m.IsPublic),
 		"[Create repo]",
 	}
-
-	for i, choice := range createChoices {
-		cursor := " "
-		if m.Cursor == i {
-			cursor = ">"
-		}
-		s += fmt.Sprintf("%s %s\n", cursor, choice)
-	}
-
-	s += "\nPress [ctrl+c] to cancel, press [enter] to toggle true/false.\n"
-	return s
+	btmMsg := "\nPress [ctrl+c] to go back, press [enter] to confirm or toggle true/false.\n"
+	return utils.ShowMenu(m, s, choices, btmMsg)
 }
 
 func ShowAllInclusive(m utils.Model) string {
-	s := "Enter the following details:\n\n"
-	createChoices := []string{
+	s := "Enter the following details:"
+	choices := []string{
 		fmt.Sprintf("Name: %s", m.RepoName),
 		fmt.Sprintf("Description: %s", m.RepoDesc),
 		fmt.Sprintf("Source (default = ./): %s", m.Source),
 		fmt.Sprintf("Public: %t", m.IsPublic),
 		"[Create repo]",
 	}
-
-	for i, choice := range createChoices {
-		cursor := " "
-		if m.Cursor == i {
-			cursor = ">"
-		}
-		s += fmt.Sprintf("%s %s\n", cursor, choice)
-	}
-
-	s += "\nPress [ctrl+c] to cancel, press [enter] to toggle true/false.\n"
-	return s
+	btmMsg := "\nPress [ctrl+c] to go back, press [enter] to confirm or toggle true/false.\n"
+	return utils.ShowMenu(m, s, choices, btmMsg)
 }
 
 func ShowCreateEmpty(m utils.Model) string {
-	s := "Enter the following details:\n\n"
-	createChoices := []string{
+	s := "Enter the following details:"
+	choices := []string{
 		fmt.Sprintf("Name: %s", m.RepoName),
 		fmt.Sprintf("Description: %s", m.RepoDesc),
 		fmt.Sprintf("Public: %t", m.IsPublic),
 		fmt.Sprintf("Clone: %t", m.CreateClone),
 		"[Create repo]",
 	}
-
-	for i, choice := range createChoices {
-		cursor := " "
-		if m.Cursor == i {
-			cursor = ">"
-		}
-		s += fmt.Sprintf("%s %s\n", cursor, choice)
-	}
-
-	s += "\nPress [ctrl+c] to cancel, press [enter] to toggle true/false.\n"
-	return s
+	btmMsg := "\nPress [ctrl+c] to go back, press [enter] to confirm or toggle true/false.\n"
+	return utils.ShowMenu(m, s, choices, btmMsg)
 }
