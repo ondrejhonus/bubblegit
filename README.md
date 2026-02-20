@@ -4,25 +4,69 @@ This is a simple TUI (Text User Interface) application written in Go using the [
 
 ## Features
 
-- **Add Files**: Add files to the staging area.
-- **Commit Changes**: Commit staged changes with a message.
-- **Push Changes**: Push committed changes to the remote repository.
-- **Initialize Repository**: Initialize a new Git repository.
-- **Create a repository**: Create a repo from local dir or empty remote
-- **Checkout Branches**: Switch between different branches in your repository.
-- **Merge Branches**: Merge changes from one branch to another.
-- **Rebase Branches**: Rebase your current branch onto another branch.
-- **Stash Changes**: Stash your uncommitted changes.
-- **Pull Requests**: Create and manage pull requests.
+- **Add Files**
+- **Commit Changes**
+- **Push Changes**
+- **Initialize Repository**
+- **Create a repository**
+- **Checkout Branches**
+- **Merge Branches**
+- **Rebase Branches**
+- **Stash Changes**
+- **Pull Requests**
+- **Pull Requests**
+- **View Logs**: View commit logs and history.
 
 ## TO-DO
-- **View Logs**: View commit logs and history.
 - **Add list branches to menu > Branch**
-- **Apply Stash**: Apply stashed changes back to your working directory.
-- **Resolve Conflicts**: Resolve merge conflicts.
+- **Apply Stash**
+- **Resolve Merge Conflicts**
+- **Edit Diffs**
 
 ## Installation
+#### Dependency list:
+- golang
+- git
+- [gh-cli](https://cli.github.com/)
 
+### Install dependencies
+
+- ##### OpenSUSE
+  ```bash
+  sudo zypper addrepo https://cli.github.com/packages/rpm/gh-cli.repo
+  sudo zypper ref
+  sudo zypper install gh
+  ```
+- ##### Arch
+  ```bash
+  sudo pacman -Syu git go github-cli
+  ```
+- ##### Fedora (New DNF5)
+  ```bash
+  sudo dnf install dnf5-plugins
+  sudo dnf config-manager addrepo --from-repofile=https://cli.github.com/packages/rpm/gh-cli.repo
+  sudo dnf install gh --repo gh-cli
+  ```
+- ##### Fedora (Old DNF4)
+  ```bash
+  sudo dnf install 'dnf-command(config-manager)'
+  sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+  sudo dnf install gh --repo gh-cli
+  ```
+- ##### Debian
+  ```bash
+  (type -p wget >/dev/null || (sudo apt update && sudo apt install wget -y)) \
+  	&& sudo mkdir -p -m 755 /etc/apt/keyrings \
+  	&& out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+  	&& cat $out | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+  	&& sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+  	&& sudo mkdir -p -m 755 /etc/apt/sources.list.d \
+  	&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+  	&& sudo apt update \
+  	&& sudo apt install gh -y
+  ```
+
+### Install the tool globally
 To install the app, you need to have Go installed on your machine. Then, you can clone the repository and build the app:
 
 ```sh
