@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os/exec"
+	"strconv"
 	"strings"
 )
 
@@ -40,4 +41,12 @@ func GetGitHubUsername() (string, error) {
 		return "", err
 	}
 	return strings.TrimSpace(out.String()), nil
+}
+
+func IsPositiveInteger(s string) bool {
+	num, err := strconv.Atoi(s)
+	if err != nil {
+		return false
+	}
+	return num > 0
 }

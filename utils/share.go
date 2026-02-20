@@ -23,6 +23,7 @@ type Model struct {
 	IsPublic    bool
 	Source      string
 	CreateClone bool
+	CloneDepth  string
 	// Checkouts and branches
 	BranchName    string
 	CreateBranch  bool
@@ -43,6 +44,7 @@ func InitialModel() Model {
 		State:       "menu", // default state
 		IsPublic:    true,
 		CreateClone: true,
+		CloneDepth:  "",
 	}
 }
 
