@@ -35,7 +35,7 @@ This is a simple TUI (Text User Interface) application written in Go using the [
   ```bash
   sudo zypper addrepo https://cli.github.com/packages/rpm/gh-cli.repo
   sudo zypper ref
-  sudo zypper install gh
+  sudo zypper install git go gh
   ```
 - ##### Arch
   ```bash
@@ -46,12 +46,14 @@ This is a simple TUI (Text User Interface) application written in Go using the [
   sudo dnf install dnf5-plugins
   sudo dnf config-manager addrepo --from-repofile=https://cli.github.com/packages/rpm/gh-cli.repo
   sudo dnf install gh --repo gh-cli
+  sudo dnf install git golang
   ```
 - ##### Fedora (Old DNF4)
   ```bash
   sudo dnf install 'dnf-command(config-manager)'
   sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
   sudo dnf install gh --repo gh-cli
+  sudo dnf install git golang
   ```
 - ##### Debian
   ```bash
@@ -63,7 +65,7 @@ This is a simple TUI (Text User Interface) application written in Go using the [
   	&& sudo mkdir -p -m 755 /etc/apt/sources.list.d \
   	&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
   	&& sudo apt update \
-  	&& sudo apt install gh -y
+  	&& sudo apt install -y git golang gh
   ```
 
 ### Install the tool globally
