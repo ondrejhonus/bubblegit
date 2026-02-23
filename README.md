@@ -6,6 +6,7 @@ This is a simple TUI (Text User Interface) application written in Go using the [
 
 - **Add Files**
 - **Commit Changes**
+- **Quick Commit** Using ```bubblegit quick [string]```
 - **Push Changes**
 - **Initialize Repository**
 - **Create a repository**
@@ -82,3 +83,28 @@ cd bubblegit
 Then you can use the ```bubblegit``` command run the app from anywhere in the terminal:
 
 Use the keyboard arrows or 'hjkl' to navigate and perform Git actions.
+
+#### Quick Commit
+To quickly **add** all files, **commit** them and **push** it, use 
+```bash
+bubblegit quick [string]
+```
+with string being the commit message without '"'.
+
+Example usage:
+```bash
+$ bubblegit quick Added quick commit func                                                                                                                         
+Added all files
+On branch feat/cli-commands
+Your branch is ahead of 'origin/feat/cli-commands' by 2 commits.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+Commited changes with commit message containing: "Added quick commit function"
+To github.com:ondrejhonus/bubblegit.git
+   5fc49d6..44ec14d  feat/cli-commands -> feat/cli-commands
+
+Quick commit complete
+```
+
+
