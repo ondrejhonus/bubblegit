@@ -1,7 +1,7 @@
 package pkg
 
 import (
-	"bubblegit/utils"
+	"github.com/ondrejhonus/bubblegit/utils"
 	"fmt"
 	"strings"
 

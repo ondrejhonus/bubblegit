@@ -34,6 +34,8 @@ type Model struct {
 	BodyMessage string
 	ID          string
 	Comment     string
+	// CMD
+	Executed	bool
 }
 
 // Exported function to create a new model
@@ -45,6 +47,7 @@ func InitialModel() Model {
 		IsPublic:    true,
 		CreateClone: true,
 		CloneDepth:  "",
+		Executed: false,
 	}
 }
 

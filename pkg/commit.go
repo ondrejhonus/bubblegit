@@ -1,7 +1,7 @@
 package pkg
 
 import (
-	"bubblegit/utils"
+	"github.com/ondrejhonus/bubblegit/utils"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
