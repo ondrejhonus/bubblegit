@@ -107,4 +107,14 @@ To github.com:ondrejhonus/bubblegit.git
 Quick commit complete
 ```
 
+## Autocompletion
+For autocompletion to work, use the ```zsh-autocompletion.sh``` or ```bash-autocompletion.sh``` scripts based on your shell.
+
+Example applification for zsh:
+```
+# Make executable
+chmod +x zsh-autocompletion.sh
+source zsh-autocompletion.sh
+```
+
 
