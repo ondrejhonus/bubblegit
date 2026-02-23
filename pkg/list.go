@@ -36,41 +36,48 @@ func ListMenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				m.State = "status"
 				m.Cursor = 0
 			case 2:
+				// Diff with current branch
+				output := utils.RunCommand("git", "diff", "--color=always")
+				m.StatusMessage = "Diff: current changes with working tree:\n\n"
+				m.StatusMessage += output
+				m.State = "status"
+				m.Cursor = 0
+			case 3:
 				// List Stashes
 				output := utils.RunCommand("git", "stash", "list")
 				m.StatusMessage = "All stashes:\n"
 				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
-			case 3:
+			case 4:
 				// List Tags
 				output := utils.RunCommand("git", "tag")
 				m.StatusMessage = "All tags:\n"
 				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
-			case 4:
+			case 5:
 				// List Remotes
 				output := utils.RunCommand("git", "remote", "-v")
 				m.StatusMessage = "All remotes:\n"
 				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
-			case 5:
+			case 6:
 				// List Configs
 				output := utils.RunCommand("git", "config", "--list")
 				m.StatusMessage = "All configurations:\n"
 				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
-			case 6:
+			case 7:
 				// List Tracked Files
 				output := utils.RunCommand("git", "ls-files")
 				m.StatusMessage = "All tracked files:\n"
 				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
-			case 7:
+			case 8:
 				// List Untracked Files
 				output := utils.RunCommand("git", "ls-files", "--others", "--exclude-standard")
 				m.StatusMessage = "All untracked files:\n"
@@ -90,10 +97,10 @@ func ListMenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			m.State = "menu"
 			m.BranchName = ""
 			m.Cursor = 0
-		case "1", "2", "3", "4", "5", "6", "7", "8":
+		case "1", "2", "3", "4", "5", "6", "7", "8", "9":
 			if len(keyMsg.String()) == 1 {
 				num := int(keyMsg.String()[0] - '1')
-				if num >= 0 && num < 8 {
+				if num >= 0 && num < 9 {
 					m.Cursor = num
 				}
 			}
@@ -113,12 +120,13 @@ func ShowListMenu(m utils.Model) string {
 	prChoices := []string{
 		"1 | Commits",
 		"2 | Branches",
-		"3 | Stashes",
-		"4 | Tags",
-		"5 | Remotes",
-		"6 | Configs",
-		"7 | Tracked Files",
-		"8 | Untracked Files",
+		"3 | Diff",
+		"4 | Stashes",
+		"5 | Tags",
+		"6 | Remotes",
+		"7 | Configs",
+		"8 | Tracked Files",
+		"9 | Untracked Files",
 	}
 	btmMsg := "Press [q] or [ctrl+c] to go back to the main menu"
 	return utils.ShowMenu(m, "Show list of", prChoices, btmMsg)

@@ -2,6 +2,7 @@ package utils
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/bubbles/viewport"
 )
 
 // Exported Model (capitalized)
@@ -36,6 +37,8 @@ type Model struct {
 	Comment     string
 	// CMD
 	Executed	bool
+	// Viewport
+	Viewport viewport.Model
 }
 
 // Exported function to create a new model

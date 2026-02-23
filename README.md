@@ -116,5 +116,3 @@ Example applification for zsh:
 chmod +x zsh-autocompletion.sh
 source zsh-autocompletion.sh
 ```
-
-
