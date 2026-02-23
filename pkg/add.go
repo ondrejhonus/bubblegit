@@ -1,7 +1,7 @@
 package pkg
 
 import (
-	"bubblegit/utils"
+	"github.com/ondrejhonus/bubblegit/utils"
 
 	// Replace with the actual module path to your main package
 	tea "github.com/charmbracelet/bubbletea"
