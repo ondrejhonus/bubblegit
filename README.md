@@ -17,12 +17,11 @@ This is a simple TUI (Text User Interface) application written in Go using the [
 - **Pull Requests**
 - **Pull Requests**
 - **View Logs**: View commit logs and history.
+- **Show diff**: Similar functionality to ```git diff```
 
 ## TO-DO
-- **Add list branches to menu > Branch**
 - **Apply Stash**
 - **Resolve Merge Conflicts**
-- **Edit Diffs**
 
 ## Installation
 #### Dependency list:
