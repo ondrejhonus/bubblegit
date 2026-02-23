@@ -6,6 +6,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/ondrejhonus/bubblegit/utils"
 
 	"github.com/spf13/cobra"
 )
@@ -13,15 +14,31 @@ import (
 // quickCmd represents the quick command
 var quickCmd = &cobra.Command{
 	Use:   "quick",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Quickly add, commit and push changes to a repository",
+	Long: `Quickly add, commit and push changes to a repository.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+This command allows you to quickly add, commit and push changes to a repository without 
+having to go through the entire process of adding, committing and pushing changes separately. 
+It is a convenient way to quickly update a repository with your changes.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("quick called")
+		commitMsg := "Added files"
+		if len(args) > 0 {
+			commitMsg = ""
+			for i := 0; i < len(args); i++ {
+				commitMsg += args[i]
+				if i != len(args)-1 {
+					commitMsg += " "
+				}
+			}
+		}
+		output := utils.RunCommand("git", "add", ".")
+		output += "Added all files\n"
+		output += utils.RunCommand("git", "commit", "-m", commitMsg)
+		output += "Commited changes with commit message containing: \"" + commitMsg + "\"\n"
+		output += utils.RunCommand("git", "push")
+		output += "\nQuick commit complete\n"
+		fmt.Println(output)
+		// fmt.Println("quick called with msg \"" + commitMsg + "\"")
 	},
 }
 
@@ -32,7 +49,7 @@ func init() {
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// quickCmd.PersistentFlags().String("foo", "", "A help for foo")
+	quickCmd.PersistentFlags().String("string", "Added files", "A help for commit message")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
