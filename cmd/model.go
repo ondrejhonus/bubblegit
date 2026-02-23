@@ -15,6 +15,12 @@ type localModel struct {
 
 func (m localModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
+	var cmds []tea.Cmd
+
+	if msg, ok := msg.(tea.WindowSizeMsg); ok {
+		m.Viewport.Width = msg.Width
+		m.Viewport.Height = msg.Height - 5 // space for header
+	}
 
 	switch m.State {
 	case "menu":
@@ -80,6 +86,16 @@ func (m localModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Model, cmd = pkg.DeletePR(m.Model, msg)
 	case "list":
 		m.Model, cmd = pkg.ListMenu(m.Model, msg)
+	case "diff":
+		m.Viewport, cmd = m.Viewport.Update(msg)
+		cmds = append(cmds, cmd)
+
+		if keyMsg, ok := msg.(tea.KeyMsg); ok {
+			if keyMsg.String() == "enter" || keyMsg.String() == "q" || keyMsg.String() == "esc" {
+				m.State = "menu"
+			}
+		}
+		return m, tea.Batch(cmds...)
 
 	}
 
@@ -146,6 +162,8 @@ func (m localModel) View() string {
 		return pkg.ShowDeletePR(m.Model)
 	case "list":
 		return pkg.ShowListMenu(m.Model)
+	case "diff":
+		return m.Viewport.View() + "\n\nPress [enter], [q] or [esc] to go back to the main menu."
 	}
 
 	return ""

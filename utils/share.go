@@ -51,6 +51,7 @@ func InitialModel() Model {
 		CreateClone: true,
 		CloneDepth:  "",
 		Executed: false,
+		Viewport: viewport.New(80,20),
 	}
 }
 

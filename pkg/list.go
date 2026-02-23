@@ -38,9 +38,9 @@ func ListMenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			case 2:
 				// Diff with current branch
 				output := utils.RunCommand("git", "diff", "--color=always")
-				m.StatusMessage = "Diff: current changes with working tree:\n\n"
-				m.StatusMessage += output
-				m.State = "status"
+				m.Viewport.SetContent(output)
+				m.Viewport.GotoTop()
+				m.State = "diff"
 				m.Cursor = 0
 			case 3:
 				// List Stashes
