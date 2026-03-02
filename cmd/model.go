@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/ondrejhonus/bubblegit/pkg"
+	"github.com/ondrejhonus/bubblegit/pkg/add"
 	"github.com/ondrejhonus/bubblegit/utils"
 	"fmt"
 	"log"
@@ -30,11 +31,11 @@ func (m localModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case "commitDesc":
 		m.Model, cmd = pkg.TypeCommitDesc(m.Model, msg)
 	case "add":
-		m.Model, cmd = pkg.Add(m.Model, msg)
+		m.Model, cmd = add.Add(m.Model, msg)
 	case "addFile":
-		m.Model, cmd = pkg.AddFile(m.Model, msg)
+		m.Model, cmd = add.AddFile(m.Model, msg)
 	case "unaddFile":
-		m.Model, cmd = pkg.UnaddFile(m.Model, msg)
+		m.Model, cmd = add.UnaddFile(m.Model, msg)
 
 	case "status":
 		if keyMsg, ok := msg.(tea.KeyMsg); ok {
@@ -86,7 +87,7 @@ func (m localModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Model, cmd = pkg.DeletePR(m.Model, msg)
 	case "list":
 		m.Model, cmd = pkg.ListMenu(m.Model, msg)
-	case "diff":
+	case "diff", "InteractiveAdd":
 		m.Viewport, cmd = m.Viewport.Update(msg)
 		cmds = append(cmds, cmd)
 
@@ -111,7 +112,7 @@ func (m localModel) View() string {
 	case "commitDesc":
 		return fmt.Sprintf("Enter commit description: %s\n\nPress [enter] to commit or [ctrl+c] to cancel.\n", m.CommitDesc)
 	case "add":
-		return pkg.ShowAddMenu(m.Model)
+		return add.ShowAddMenu(m.Model)
 	case "addFile":
 		return fmt.Sprintf("Enter file name to add: %s\n\nPress [enter] to add or [ctrl+c] to cancel.\n", m.FileName)
 	case "unaddFile":
@@ -162,7 +163,7 @@ func (m localModel) View() string {
 		return pkg.ShowDeletePR(m.Model)
 	case "list":
 		return pkg.ShowListMenu(m.Model)
-	case "diff":
+	case "diff", "InteractiveAdd":
 		return m.Viewport.View() + "\n\nPress [enter], [q] or [esc] to go back to the main menu."
 	}
 

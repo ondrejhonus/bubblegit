@@ -1,4 +1,4 @@
-package pkg
+package add
 
 import (
 	"github.com/ondrejhonus/bubblegit/utils"
@@ -28,13 +28,15 @@ func Add(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 				utils.RunCommand("git", "add", ".")
 				m.State = "menu"
 				m.Cursor = 0
+			case 4:
+				return InteractiveAdd(m, msg)
 			}
 		case "up", "k":
 			if m.Cursor > 0 {
 				m.Cursor--
 			}
 		case "down", "j":
-			if m.Cursor < 3 {
+			if m.Cursor < 4 {
 				m.Cursor++
 			}
 		case "ctrl+c", "q":
@@ -43,7 +45,7 @@ func Add(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 		case "1", "2", "3", "4":
 			if len(keyMsg.String()) == 1 {
 				num := int(keyMsg.String()[0] - '1')
-				if num >= 0 && num < 4 {
+				if num >= 0 && num <= 4 {
 					m.Cursor = num
 				}
 			}
@@ -77,7 +79,13 @@ func AddFile(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 // Print the add menu on the screen
 func ShowAddMenu(m utils.Model) string {
 	s := "What would you like to add?"
-	choices := []string{"1 | All files", "2 | Add file", "3 | Un-add file", "4 | Reset added"}
+	choices := []string{
+	"1 | All files", 
+	"2 | Add file", 
+	"3 | Un-add file", 
+	"4 | Reset added",
+	"5 | Interactive add",
+}
 	btmMsg := "Press [q] or [ctrl+c] to go back to the main menu"
 	return utils.ShowMenu(m, s, choices, btmMsg)
 }
@@ -103,3 +111,4 @@ func UnaddFile(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 	}
 	return m, nil
 }
+
