@@ -92,7 +92,7 @@ func ListMenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			m.State = "menu"
 			m.BranchName = ""
 			m.Cursor = 0
-		case "1", "2", "3", "4", "5", "6", "7", "8", "9", "10":
+		case "1", "2", "3", "4", "5", "6", "7", "8", "9", "0":
 			if len(keyMsg.String()) == 1 {
 				num := int(keyMsg.String()[0] - '1')
 				if num >= 0 && num < 9 {
@@ -124,6 +124,5 @@ func ShowListMenu(m utils.Model) string {
 		"9  | Tracked Files",
 		"10 | Untracked Files",
 	}
-	btmMsg := "Press [q] or [ctrl+c] to go back to the main menu"
-	return utils.ShowMenu(m, "Show list of", prChoices, btmMsg)
+	return utils.ShowMenu(m, "Show list of", prChoices, m.ExitMessage)
 }

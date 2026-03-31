@@ -79,6 +79,5 @@ func MenuFunctions(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 // print
 func ShowMenu(m utils.Model) string {
 	s := "What would you like to do?"
-	btmMsg := "\nPress [ctrl+c] or [q] to go back.\n"
-	return utils.ShowMenu(m, s, m.Choices, btmMsg)
+	return utils.ShowMenu(m, s, m.Choices, m.ExitMessage)
 }

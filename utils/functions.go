@@ -19,7 +19,7 @@ func RunCommand(name string, args ...string) string {
 	return string(output)
 }
 
-func ShowMenu(m Model, title string, choices []string, top string) string {
+func ShowMenu(m Model, title string, choices []string, bottom string) string {
 	s := title + "\n"
 	for i, choice := range choices {
 		cursor := " "
@@ -28,7 +28,7 @@ func ShowMenu(m Model, title string, choices []string, top string) string {
 		}
 		s += fmt.Sprintf("%s %s\n", cursor, choice)
 	}
-	s += "\n" + top
+	s += "\n" + bottom
 	return s
 }
 

@@ -105,8 +105,7 @@ func ShowPullRequestSubmenu(m utils.Model) string {
 		"9 | Reopen a pull request",
 		"0 | Delete a pull request",
 	}
-	btmMsg := "Press [q] or [ctrl+c] to go back to the main menu"
-	return utils.ShowMenu(m, "Pull request", prChoices, btmMsg)
+	return utils.ShowMenu(m, "Pull request", prChoices, m.ExitMessage)
 }
 
 func CreatePR(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {

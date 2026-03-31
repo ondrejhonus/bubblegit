@@ -37,6 +37,13 @@ func RepoCreate(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			}
 		case "ctrl+c", "q":
 			m.State = "menu"
+		case "1", "2", "3", "4":
+			if len(keyMsg.String()) == 1 {
+				num := int(keyMsg.String()[0] - '1')
+				if num >= 0 && num < 9 {
+					m.Cursor = num
+				}
+			}
 		}
 	}
 	return m, nil
@@ -62,26 +69,21 @@ func FromLocal(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 		case "enter":
 			switch m.Cursor {
 			case 0:
-				// Repo name
 				if m.RepoName == "" {
 					m.RepoName = "bubblegit-repo"
 				}
 				m.Cursor++
 			case 1:
-				// Repo description
 				m.Cursor++
 			case 2:
-				// Source
 				if m.Source == "" {
 					m.Source = "."
 				}
 				m.Cursor++
 			case 3:
-				// Public
 				m.IsPublic = !m.IsPublic
 				m.Cursor++
 			case 4:
-				// Create repo
 				var visibility string
 				if m.IsPublic {
 					visibility = "--public"
@@ -126,13 +128,6 @@ func FromLocal(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 					m.Source = m.Source[:len(m.Source)-1]
 				}
 			}
-		case "1", "2", "3", "4", "5", "6", "7", "8", "9", "0":
-			if len(keyMsg.String()) == 1 {
-				num := int(keyMsg.String()[0] - '1')
-				if num >= 0 && num < 8 {
-					m.Cursor = num
-				}
-			}
 		default:
 			switch m.Cursor {
 			case 0:
@@ -153,26 +148,21 @@ func AllInclusive(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 		case "enter":
 			switch m.Cursor {
 			case 0:
-				// Repo name
 				if m.RepoName == "" {
 					m.RepoName = "bubblegit-repo"
 				}
 				m.Cursor++
 			case 1:
-				// Repo description
 				m.Cursor++
 			case 2:
-				// Source
 				if m.Source == "" {
 					m.Source = "."
 				}
 				m.Cursor++
 			case 3:
-				// Public
 				m.IsPublic = !m.IsPublic
 				m.Cursor++
 			case 4:
-				// Create repo
 				var visibility string
 				if m.IsPublic {
 					visibility = "--public"
@@ -230,6 +220,7 @@ func AllInclusive(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			case 2:
 				m.Source += keyMsg.String()
 			}
+		
 		}
 	}
 	return m, nil
@@ -241,24 +232,19 @@ func CreateEmpty(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 		case "enter":
 			switch m.Cursor {
 			case 0:
-				// Repo name
 				if m.RepoName == "" {
 					m.RepoName = "bubblegit-repo"
 				}
 				m.Cursor++
 			case 1:
-				// Repo description
 				m.Cursor++
 			case 2:
-				// Public?
 				m.IsPublic = !m.IsPublic
 				m.Cursor++
 			case 3:
-				// Clone?
 				m.CreateClone = !m.CreateClone
 				m.Cursor++
 			case 4:
-				// Create repo
 				var visibility string
 				if m.IsPublic {
 					visibility = "--public"
@@ -272,7 +258,6 @@ func CreateEmpty(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 					clone = ""
 				}
 
-				// gh repo create <repo-name> --description "<repo-description>" --public --clone
 				output := utils.RunCommand("gh", "repo", "create", m.RepoName, "--description", m.RepoDesc, visibility, clone)
 				m.StatusMessage = output
 				m.State = "status"

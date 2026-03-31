@@ -5,7 +5,7 @@ import (
 	"github.com/charmbracelet/bubbles/viewport"
 )
 
-// Exported Model (capitalized)
+// main model (yes its a mess)
 type Model struct {
 	Choices       []string
 	Cursor        int
@@ -39,23 +39,23 @@ type Model struct {
 	Executed	bool
 	// Viewport
 	Viewport viewport.Model
+	ExitMessage string
 }
 
-// Exported function to create a new model
 func InitialModel() Model {
 	return Model{
 		Choices:     []string{"1 | Add", "2 | Commit", "3 | Push", "4 | Pull", "5 | Clone", "6 | Show", "7 | Branch", "8 | Pull request", "9 | Create repo"},
 		Selected:    make(map[int]struct{}),
-		State:       "menu", // default state
+		State:       "menu",
 		IsPublic:    true,
 		CreateClone: true,
 		CloneDepth:  "",
 		Executed: false,
 		Viewport: viewport.New(80,20),
+		ExitMessage: "Press [q] or [ctrl+c] to go back",
 	}
 }
 
-// Exported Init function
 func (m Model) Init() tea.Cmd {
 	return nil
 }

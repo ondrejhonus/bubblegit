@@ -68,13 +68,6 @@ func AddFile(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 	return m, nil
 }
 
-func ShowAddMenu(m utils.Model) string {
-	s := "What would you like to add?"
-	choices := []string{"1 | All files", "2 | Add file", "3 | Un-add file", "4 | Reset added"}
-	btmMsg := "Press [q] or [ctrl+c] to go back to the main menu"
-	return utils.ShowMenu(m, s, choices, btmMsg)
-}
-
 func UnaddFile(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		switch keyMsg.String() {
@@ -94,4 +87,10 @@ func UnaddFile(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 		}
 	}
 	return m, nil
+}
+
+func ShowAddMenu(m utils.Model) string {
+	s := "What would you like to add?"
+	choices := []string{"1 | All files", "2 | Add file", "3 | Un-add file", "4 | Reset added"}
+	return utils.ShowMenu(m, s, choices, m.ExitMessage)
 }
