@@ -13,72 +13,62 @@ func ListMenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			switch m.Cursor {
 			case 0:
 				// Short Commit list
-				// Prolly use "git log --oneline --graph --decorate --all"
 				output := utils.RunCommand("git", "log", "--oneline", "--graph", "--decorate", "--all")
 				m.StatusMessage = "All commits in brief graph view:\n"
 				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
-			// case 1:
-			// 	// Commit list
-			// 	// Prolly use "git log"
-			// 	output := utils.RunCommand("git", "log", "--graph", "--pretty=format:%h %ad | %s%d [%an]", "--date=short")
-			// 	m.StatusMessage = "All commits in full detail:\n"
-			// 	m.StatusMessage = output
-			// 	m.State = "CommitList"
-			// 	m.Cursor = 0
 			case 1:
-				// List Branches
-				// Prolly use "git branch -a"
+				// list branches
 				output := utils.RunCommand("git", "branch", "-a")
 				m.StatusMessage = "All branches:\n"
 				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
 			case 2:
-				// Diff with current branch
+				// branch diff
 				output := utils.RunCommand("git", "diff", "--color=always")
 				m.Viewport.SetContent(output)
 				m.Viewport.GotoTop()
 				m.State = "diff"
 				m.Cursor = 0
 			case 3:
-				// List Stashes
+				// stash list
 				output := utils.RunCommand("git", "stash", "list")
 				m.StatusMessage = "All stashes:\n"
 				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
 			case 4:
-				// List Tags
+				// tag list
 				output := utils.RunCommand("git", "tag")
 				m.StatusMessage = "All tags:\n"
 				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
 			case 5:
-				// List Remotes
+				// remote list
 				output := utils.RunCommand("git", "remote", "-v")
 				m.StatusMessage = "All remotes:\n"
 				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
 			case 6:
-				// List Configs
+				// config list
 				output := utils.RunCommand("git", "config", "--list")
 				m.StatusMessage = "All configurations:\n"
 				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
 			case 7:
-				// List Tracked Files
+				// tracked files
 				output := utils.RunCommand("git", "ls-files")
 				m.StatusMessage = "All tracked files:\n"
 				m.StatusMessage += output
 				m.State = "status"
 				m.Cursor = 0
 			case 8:
-				// List Untracked Files
+				// untracked
 				output := utils.RunCommand("git", "ls-files", "--others", "--exclude-standard")
 				m.StatusMessage = "All untracked files:\n"
 				m.StatusMessage += output

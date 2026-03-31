@@ -4,11 +4,9 @@ import (
 	"github.com/ondrejhonus/bubblegit/utils"
 	"fmt"
 
-	// Replace with the actual module path to your main package
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-// Get keypresses and update the strings
 func CloneRepo(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		switch keyMsg.String() {

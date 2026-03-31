@@ -7,23 +7,23 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-///////////////////////////////////
-/////////// CREATE REPO ///////////
-///////////////////////////////////
-
-// Create repo menu 1
+// main menu of create repo
 func RepoCreate(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		switch keyMsg.String() {
 		case "enter":
 			switch m.Cursor {
 			case 0:
+				output := utils.RunCommand("git", "init")
+				m.StatusMessage = output
+				m.State = "status"
+			case 1:
 				m.State = "allInclusive"
 				m.Cursor = 0
-			case 1:
+			case 2:
 				m.State = "fromLocal"
 				m.Cursor = 0
-			case 2:
+			case 3:
 				m.State = "createEmpty"
 				m.Cursor = 0
 			}
@@ -45,15 +45,17 @@ func RepoCreate(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 func ShowCreateRepoMenu(m utils.Model) string {
 	s := "What would you want to do?"
 	choices := []string{
-		"1 | From local + commit",
-		"2 | Create repo from ./",
-		"3 | Create empty remote",
+		"1 | Init git repo",
+		"2 | From local + commit",
+		"3 | Create repo from ./",
+		"4 | Create empty remote",
 	}
 	btmMsg := "\nPress [ctrl+c] or [q] to go back, [enter] to confirm.\n"
 	return utils.ShowMenu(m, s, choices, btmMsg)
 }
 
-// Get keypresses and update the file name to add
+// start of subfunctioins of create repo
+
 func FromLocal(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		switch keyMsg.String() {

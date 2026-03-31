@@ -8,23 +8,6 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-/*
-gh pr create --base [target] 	   --head [source]
-gh pr create --base my-base-branch --head my-changed-branch
-*/
-
-/*
-1. create X
-2. list X
-3. status X
-4. checkout X
-5. view
-6. approve X
-7. close
-8. merge
-9. reopen
-10. delete
-*/
 
 func PullRequestSubmenu(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {

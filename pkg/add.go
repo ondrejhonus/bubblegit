@@ -3,15 +3,10 @@ package pkg
 import (
 	"github.com/ondrejhonus/bubblegit/utils"
 
-	// Replace with the actual module path to your main package
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-///////////////////////////////////
-/////////// ADD ///////////////////
-///////////////////////////////////
-
-// Handle keypresses for the add menu
+// main add menu
 func Add(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		switch keyMsg.String() {
@@ -52,7 +47,6 @@ func Add(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 	return m, nil
 }
 
-// Get keypresses and update the file name to add
 func AddFile(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		switch keyMsg.String() {
@@ -74,7 +68,6 @@ func AddFile(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 	return m, nil
 }
 
-// Print the add menu on the screen
 func ShowAddMenu(m utils.Model) string {
 	s := "What would you like to add?"
 	choices := []string{"1 | All files", "2 | Add file", "3 | Un-add file", "4 | Reset added"}
@@ -82,7 +75,6 @@ func ShowAddMenu(m utils.Model) string {
 	return utils.ShowMenu(m, s, choices, btmMsg)
 }
 
-// Get keypresses and update the file name to unstage
 func UnaddFile(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		switch keyMsg.String() {

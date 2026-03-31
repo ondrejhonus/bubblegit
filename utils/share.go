@@ -44,7 +44,7 @@ type Model struct {
 // Exported function to create a new model
 func InitialModel() Model {
 	return Model{
-		Choices:     []string{"1 | Add", "2 | Commit", "3 | Push", "4 | Clone", "5 | Show", "6 | Branch", "7 | Pull request", "8 | Init", "9 | Create repo"},
+		Choices:     []string{"1 | Add", "2 | Commit", "3 | Push", "4 | Pull", "5 | Clone", "6 | Show", "7 | Branch", "8 | Pull request", "9 | Create repo"},
 		Selected:    make(map[int]struct{}),
 		State:       "menu", // default state
 		IsPublic:    true,

@@ -5,15 +5,9 @@ import (
 	"fmt"
 	"strings"
 
-	// Replace with the actual module path to your main package
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-///////////////////////////////////
-/////////// BRANCHES //////////////
-///////////////////////////////////
-
-// Handle keypresses for the checkout menu
 func BranchControl(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		switch keyMsg.String() {
@@ -61,7 +55,6 @@ func BranchControl(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 	return m, nil
 }
 
-// Print the branches menu on the screen
 func ShowBranchesMenu(m utils.Model) string {
 	s := "Branches"
 	choices := []string{
@@ -76,7 +69,6 @@ func ShowBranchesMenu(m utils.Model) string {
 	return utils.ShowMenu(m, s, choices, btmMsg)
 }
 
-// Get keypresses and update the strings
 func CheckoutBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		switch keyMsg.String() {
@@ -132,7 +124,6 @@ func CheckoutBranch(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 	return m, nil
 }
 
-// Print the add menu on the screen
 func ShowCheckoutBranch(m utils.Model) string {
 	s := "Configure branch checkout"
 	choices := []string{
