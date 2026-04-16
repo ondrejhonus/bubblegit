@@ -1,8 +1,8 @@
 package utils
 
 import (
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/bubbles/viewport"
+	tea "github.com/charmbracelet/bubbletea"
 )
 
 // main model (yes its a mess)
@@ -36,9 +36,9 @@ type Model struct {
 	ID          string
 	Comment     string
 	// CMD
-	Executed	bool
+	Executed bool
 	// Viewport
-	Viewport viewport.Model
+	Viewport    viewport.Model
 	ExitMessage string
 }
 
@@ -50,8 +50,8 @@ func InitialModel() Model {
 		IsPublic:    true,
 		CreateClone: true,
 		CloneDepth:  "",
-		Executed: false,
-		Viewport: viewport.New(80,20),
+		Executed:    false,
+		Viewport:    viewport.New(80, 20),
 		ExitMessage: "Press [q] or [ctrl+c] to go back",
 	}
 }
