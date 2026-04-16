@@ -6,14 +6,12 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-
-
 // main menu
 func MenuFunctions(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		switch keyMsg.String() {
 		case "ctrl+c", "q":
-			return m, tea.Quit
+			return m, tea.Batch(tea.ClearScreen, tea.Quit)
 		case "up", "k":
 			if m.Cursor > 0 {
 				m.Cursor--

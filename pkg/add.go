@@ -92,6 +92,5 @@ func UnaddFile(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 func ShowAddMenu(m utils.Model) string {
 	s := "What would you like to add?"
 	choices := []string{"1 | All files", "2 | Add file", "3 | Un-add file", "4 | Reset added"}
-	choices = append(choices)
 	return utils.ShowMenu(m, s, choices, m.ExitMessage)
 }

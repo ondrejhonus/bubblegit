@@ -1,10 +1,11 @@
 package cmd
 
 import (
-	"github.com/ondrejhonus/bubblegit/pkg"
-	"github.com/ondrejhonus/bubblegit/utils"
 	"fmt"
 	"log"
+
+	"github.com/ondrejhonus/bubblegit/pkg"
+	"github.com/ondrejhonus/bubblegit/utils"
 
 	tea "github.com/charmbracelet/bubbletea"
 )

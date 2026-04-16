@@ -1,11 +1,12 @@
 /*
 Copyright © 2026 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"fmt"
+
+	"github.com/ondrejhonus/bubblegit/global"
 	"github.com/ondrejhonus/bubblegit/utils"
 
 	"github.com/spf13/cobra"
@@ -34,10 +35,14 @@ Exampe usage:
 			}
 		}
 		output := utils.RunCommand("git", "add", ".")
+		output += global.Colour().Cyan
+		output += global.Style().Bold
 		output += "Added all files\n"
 		output += utils.RunCommand("git", "commit", "-m", commitMsg)
+		output += global.Colour().Cyan
 		output += "Commited changes with commit message containing: \"" + commitMsg + "\"\n"
 		output += utils.RunCommand("git", "push")
+		output += global.Colour().Green
 		output += "\nQuick commit complete\n"
 		fmt.Println(output)
 		// fmt.Println("quick called with msg \"" + commitMsg + "\"")
