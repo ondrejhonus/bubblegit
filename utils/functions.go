@@ -26,7 +26,7 @@ func ShowMenu(m Model, title string, choices []string, bottom string) string {
 	for i, choice := range choices {
 		cursor := " "
 		if m.Cursor == i {
-			cursor = ">"
+			cursor = global.Colour().White + global.Style().Bold + ">"
 		}
 		s += fmt.Sprintf("%s %s\n", cursor, global.Colour().Cyan+choice+global.Style().Reset)
 	}
