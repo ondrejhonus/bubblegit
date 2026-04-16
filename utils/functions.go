@@ -22,15 +22,15 @@ func RunCommand(name string, args ...string) string {
 }
 
 func ShowMenu(m Model, title string, choices []string, bottom string) string {
-	s := global.Colour().Cyan + global.Style().Bold + title + "\n" + global.Style().Reset
+	s := global.Colour().Purple + global.Style().Bold + title + "\n" + global.Style().Reset
 	for i, choice := range choices {
 		cursor := " "
 		if m.Cursor == i {
 			cursor = ">"
 		}
-		s += fmt.Sprintf("%s %s\n", cursor, choice)
+		s += fmt.Sprintf("%s %s\n", cursor, global.Colour().Cyan+choice+global.Style().Reset)
 	}
-	s += "\n" + bottom
+	s += "\n" + global.Colour().Purple + global.Style().Bold + bottom + global.Style().Reset
 	return s
 }
 
