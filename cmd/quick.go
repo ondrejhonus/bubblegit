@@ -43,7 +43,7 @@ Exampe usage:
 		output += global.Colour().Cyan
 		output += global.Style().Bold
 		output += "Commited changes with commit message containing: \"" + global.Colour().Purple +
-			commitMsg + global.Style().Reset + "\"\n"
+			commitMsg + global.Colour().Cyan + "\"\n"
 		output += global.Style().Reset
 		output += utils.RunCommand("git", "push")
 		output += global.Style().Bold
