@@ -149,7 +149,7 @@ func AllInclusive(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 			switch m.Cursor {
 			case 0:
 				if m.RepoName == "" {
-					m.RepoName = "bubblegit-repo"
+					m.RepoName = "my-repo"
 				}
 				m.Cursor++
 			case 1:
@@ -170,10 +170,12 @@ func AllInclusive(m utils.Model, msg tea.Msg) (utils.Model, tea.Cmd) {
 					visibility = "--private"
 				}
 				utils.RunCommand("git", "init")
+				utils.RunCommand("git", "branch", "-m", "main")
 				utils.RunCommand("git", "add", ".")
 				utils.RunCommand("git", "commit", "-m", "Initial commit")
-				utils.RunCommand("git", "branch", "-M", "main")
-				output := utils.RunCommand("gh", "repo", "create", m.RepoName, "--description", m.RepoDesc, visibility, "--source", ".", "--push")
+				output := utils.RunCommand("gh", "repo", "create", m.RepoName, "--description", m.RepoDesc, visibility, "--source", ".")
+				output += "\nPushing to remote:\n"
+				output += utils.RunCommand("git", "push", "--set-upstream", "origin", "main")
 				m.StatusMessage = output
 				m.State = "status"
 				m.RepoName = ""
